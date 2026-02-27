@@ -1,6 +1,5 @@
 import "../styles/global.css";
-const HERO_IMAGE =
-  "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=2400&q=80";
+const HERO_IMAGE = "/hero-pool.jpg";
 ---
 <!doctype html>
 <html lang="en">
@@ -15,12 +14,12 @@ const HERO_IMAGE =
     <meta name="theme-color" content="#020617" />
   </head>
 
-  <body class="bg-slate-950 text-white">
+  <body class="bg-slate-950 text-white antialiased">
     <header class="sticky top-0 z-50 border-b border-white/10 bg-slate-950/60 backdrop-blur">
       <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
         <div class="flex items-center gap-3">
           <div class="h-9 w-9 rounded-full border border-white/20 bg-white/10"></div>
-          <div class="font-semibold tracking-tight">PoolGuardian</div>
+          <div class="font-display text-2xl font-semibold leading-none tracking-tight">PoolGuardian</div>
           <span class="ml-2 rounded-full border border-white/15 bg-white/5 px-2 py-1 text-xs text-white/80">
             US-first SaaS
           </span>
@@ -61,7 +60,7 @@ const HERO_IMAGE =
             <span>France</span>
           </div>
 
-          <h1 class="mt-6 text-4xl font-semibold leading-tight tracking-tight md:text-6xl">
+          <h1 class="font-display mt-6 text-5xl font-semibold leading-tight tracking-tight md:text-7xl">
             Keep pools safe, water clean, and inspections stress-free.
           </h1>
 
@@ -111,7 +110,7 @@ const HERO_IMAGE =
     <section id="product" class="border-t border-white/10">
       <div class="mx-auto grid max-w-6xl gap-8 px-4 py-16 md:grid-cols-2 md:items-center">
         <div>
-          <h2 class="text-3xl font-semibold tracking-tight">A simple workflow teams actually use.</h2>
+          <h2 class="font-display text-4xl font-semibold tracking-tight md:text-5xl">A simple workflow teams actually use.</h2>
           <p class="mt-3 text-white/70">
             Start manual for MVP with fast daily checklists and logs. Upgrade later to automation and
             connected sensors.
@@ -156,7 +155,7 @@ const HERO_IMAGE =
 
     <section id="how" class="border-t border-white/10">
       <div class="mx-auto max-w-6xl px-4 py-16">
-        <h2 class="text-3xl font-semibold tracking-tight">How it works</h2>
+        <h2 class="font-display text-4xl font-semibold tracking-tight md:text-5xl">How it works</h2>
         <div class="mt-8 grid gap-4 md:grid-cols-3">
           <div class="rounded-2xl border border-white/15 bg-white/5 p-6">
             <div class="text-sm font-semibold">1) Configure</div>
@@ -177,7 +176,7 @@ const HERO_IMAGE =
     <section id="pricing" class="border-t border-white/10">
       <div class="mx-auto max-w-6xl px-4 py-16">
         <div class="rounded-3xl border border-white/15 bg-gradient-to-r from-white/5 to-white/0 p-8 md:p-10">
-          <h2 class="text-3xl font-semibold tracking-tight">Pricing built for portfolios</h2>
+          <h2 class="font-display text-4xl font-semibold tracking-tight md:text-5xl">Pricing built for portfolios</h2>
           <p class="mt-3 text-white/70">Start with an MVP plan for manual logs. Add automation later.</p>
           <div class="mt-6 flex flex-col gap-3 sm:flex-row" id="demo">
             <a
