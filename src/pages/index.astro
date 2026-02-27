@@ -1,49 +1,206 @@
----
-import BaseLayout from "../layouts/BaseLayout.astro";
-import Hero from "../components/Hero.astro";
-import Sections from "../components/Sections.astro";
-import Pricing from "../components/Pricing.jsx";
-import Faq from "../components/Faq.jsx";
-import DemoForm from "../components/DemoForm.jsx";
 import "../styles/global.css";
+const HERO_IMAGE =
+  "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=2400&q=80";
 ---
-<BaseLayout title="PoolGuardian - Pool Risk & Compliance Monitoring" description="Monitoring, logs, alerts and audit-ready reporting for luxury pools.">
-  <div class="nav">
-    <div class="container navInner">
-      <div style="display:flex; gap:10px; align-items:center;">
-        <div class="icon">🏊‍♂️</div>
-        <div style="font-weight:800;">PoolGuardian</div>
-        <div class="badge" style="margin-left:8px;">US-first SaaS</div>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PoolGuardian - Pool Safety & Water Quality Monitoring</title>
+    <meta
+      name="description"
+      content="Daily checks, water tests, maintenance logs, alerts, and audit-ready reports for luxury pools."
+    />
+    <meta name="theme-color" content="#020617" />
+  </head>
+
+  <body class="bg-slate-950 text-white">
+    <header class="sticky top-0 z-50 border-b border-white/10 bg-slate-950/60 backdrop-blur">
+      <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
+        <div class="flex items-center gap-3">
+          <div class="h-9 w-9 rounded-full border border-white/20 bg-white/10"></div>
+          <div class="font-semibold tracking-tight">PoolGuardian</div>
+          <span class="ml-2 rounded-full border border-white/15 bg-white/5 px-2 py-1 text-xs text-white/80">
+            US-first SaaS
+          </span>
+        </div>
+
+        <nav class="hidden items-center gap-6 text-sm text-white/80 md:flex">
+          <a class="hover:text-white" href="#product">Product</a>
+          <a class="hover:text-white" href="#how">How it works</a>
+          <a class="hover:text-white" href="#pricing">Pricing</a>
+        </nav>
+
+        <a
+          href="#demo"
+          class="rounded-xl bg-emerald-500/90 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-emerald-400"
+        >
+          Request a demo
+        </a>
       </div>
+    </header>
 
-      <div class="navLinks">
-        <a class="small" href="#how">Product</a>
-        <a class="small" href="#pricing">Pricing</a>
-        <a class="small" href="#demo">Demo</a>
-        <a class="btn btnPrimary" href="#demo">Request a demo</a>
+    <section class="relative overflow-hidden">
+      <div
+        class="absolute inset-0 bg-cover bg-center"
+        style={`background-image:url('${HERO_IMAGE}')`}
+      ></div>
+      <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/70 to-slate-950/20"></div>
+      <div class="absolute inset-0 bg-slate-950/35"></div>
+
+      <div class="relative mx-auto max-w-6xl px-4 py-20 md:py-28">
+        <div class="max-w-2xl">
+          <div class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs text-white/90">
+            <span>Risk + Compliance</span>
+            <span class="opacity-70">-</span>
+            <span>USA</span>
+            <span class="opacity-70">-</span>
+            <span>Canada</span>
+            <span class="opacity-70">-</span>
+            <span>France</span>
+          </div>
+
+          <h1 class="mt-6 text-4xl font-semibold leading-tight tracking-tight md:text-6xl">
+            Keep pools safe, water clean, and inspections stress-free.
+          </h1>
+
+          <p class="mt-5 text-lg leading-relaxed text-white/80 md:text-xl">
+            Daily checks, water tests, maintenance logs, alerts, and monthly compliance reports - built
+            for luxury properties and property managers.
+          </p>
+
+          <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+            <a
+              href="#demo"
+              class="rounded-xl bg-white px-5 py-3 text-sm font-semibold text-slate-950 hover:bg-white/90"
+            >
+              Request a demo
+            </a>
+            <a
+              href="#product"
+              class="rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10"
+            >
+              See the product
+            </a>
+          </div>
+
+          <div class="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-3">
+            <div class="rounded-2xl border border-white/15 bg-white/5 p-4">
+              <div class="text-sm font-semibold">Water tests</div>
+              <div class="mt-1 text-sm text-white/70">pH, chlorine, temperature, notes.</div>
+            </div>
+            <div class="rounded-2xl border border-white/15 bg-white/5 p-4">
+              <div class="text-sm font-semibold">Safety checks</div>
+              <div class="mt-1 text-sm text-white/70">Cover, signage, gates, incidents.</div>
+            </div>
+            <div class="rounded-2xl border border-white/15 bg-white/5 p-4">
+              <div class="text-sm font-semibold">Audit-ready logs</div>
+              <div class="mt-1 text-sm text-white/70">PDF reports and full traceability.</div>
+            </div>
+          </div>
+
+          <p class="mt-8 text-xs text-white/60">
+            Disclaimer: PoolGuardian supports monitoring and documentation. It does not prevent drowning and
+            does not replace certified safety systems or human supervision.
+          </p>
+        </div>
       </div>
-    </div>
-  </div>
+    </section>
 
-  <Hero />
-  <Sections />
-
-  <Pricing client:load />
-  <DemoForm client:load />
-  <Faq client:load />
-
-  <div class="footer">
-    <div class="container">
-      <div class="hr"></div>
-      <div style="display:flex; justify-content:space-between; gap:14px; flex-wrap:wrap;">
+    <section id="product" class="border-t border-white/10">
+      <div class="mx-auto grid max-w-6xl gap-8 px-4 py-16 md:grid-cols-2 md:items-center">
         <div>
-          <div style="font-weight:700;">PoolGuardian</div>
-          <div class="small">Risk & compliance monitoring platform for pools.</div>
+          <h2 class="text-3xl font-semibold tracking-tight">A simple workflow teams actually use.</h2>
+          <p class="mt-3 text-white/70">
+            Start manual for MVP with fast daily checklists and logs. Upgrade later to automation and
+            connected sensors.
+          </p>
+
+          <ul class="mt-6 space-y-3 text-sm text-white/80">
+            <li class="flex gap-2"><span class="mt-1 h-2 w-2 rounded-full bg-emerald-400"></span> One dashboard for multi-property portfolios</li>
+            <li class="flex gap-2"><span class="mt-1 h-2 w-2 rounded-full bg-emerald-400"></span> Alerts when checks are missed or values are out of range</li>
+            <li class="flex gap-2"><span class="mt-1 h-2 w-2 rounded-full bg-emerald-400"></span> Monthly PDF reports for owners and compliance</li>
+          </ul>
         </div>
-        <div class="small" style="max-width:520px;">
-          Disclaimer: PoolGuardian supports monitoring & documentation. It does not prevent drowning and does not replace certified safety systems, supervision, or local legal obligations.
+
+        <div class="rounded-3xl border border-white/15 bg-white/5 p-6">
+          <div class="text-sm font-semibold text-white/90">Live preview (MVP)</div>
+
+          <div class="mt-4 space-y-4">
+            <div class="rounded-2xl border border-white/10 bg-slate-950/40 p-4">
+              <div class="text-sm font-semibold">Villa - Miami</div>
+              <div class="mt-2 flex items-center justify-between text-sm text-white/75">
+                <span>Water quality</span><span class="text-amber-300">Attention</span>
+              </div>
+              <div class="mt-2 flex items-center justify-between text-sm text-white/75">
+                <span>Safety status</span><span class="text-amber-300">Cover open</span>
+              </div>
+              <div class="mt-2 text-xs text-white/60">Last check: Today 09:12</div>
+            </div>
+
+            <div class="rounded-2xl border border-white/10 bg-slate-950/40 p-4">
+              <div class="text-sm font-semibold">Boutique Hotel - Nice</div>
+              <div class="mt-2 flex items-center justify-between text-sm text-white/75">
+                <span>Water quality</span><span class="text-emerald-300">OK</span>
+              </div>
+              <div class="mt-2 flex items-center justify-between text-sm text-white/75">
+                <span>Maintenance</span><span class="text-emerald-300">Scheduled</span>
+              </div>
+              <div class="mt-2 text-xs text-white/60">Monthly report: Ready</div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-</BaseLayout>
+    </section>
+
+    <section id="how" class="border-t border-white/10">
+      <div class="mx-auto max-w-6xl px-4 py-16">
+        <h2 class="text-3xl font-semibold tracking-tight">How it works</h2>
+        <div class="mt-8 grid gap-4 md:grid-cols-3">
+          <div class="rounded-2xl border border-white/15 bg-white/5 p-6">
+            <div class="text-sm font-semibold">1) Configure</div>
+            <p class="mt-2 text-sm text-white/70">Add properties, pools, checklists, and thresholds.</p>
+          </div>
+          <div class="rounded-2xl border border-white/15 bg-white/5 p-6">
+            <div class="text-sm font-semibold">2) Operate</div>
+            <p class="mt-2 text-sm text-white/70">Teams log tests, maintenance, and safety checks in minutes.</p>
+          </div>
+          <div class="rounded-2xl border border-white/15 bg-white/5 p-6">
+            <div class="text-sm font-semibold">3) Prove</div>
+            <p class="mt-2 text-sm text-white/70">Export audit-ready logs and monthly PDF compliance reports.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="pricing" class="border-t border-white/10">
+      <div class="mx-auto max-w-6xl px-4 py-16">
+        <div class="rounded-3xl border border-white/15 bg-gradient-to-r from-white/5 to-white/0 p-8 md:p-10">
+          <h2 class="text-3xl font-semibold tracking-tight">Pricing built for portfolios</h2>
+          <p class="mt-3 text-white/70">Start with an MVP plan for manual logs. Add automation later.</p>
+          <div class="mt-6 flex flex-col gap-3 sm:flex-row" id="demo">
+            <a
+              href="#"
+              class="rounded-xl bg-emerald-500/90 px-5 py-3 text-sm font-semibold text-slate-950 hover:bg-emerald-400"
+            >
+              Request a demo
+            </a>
+            <a
+              href="#"
+              class="rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10"
+            >
+              Get pricing
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="border-t border-white/10 py-10">
+      <div class="mx-auto max-w-6xl px-4 text-sm text-white/60">
+        &copy; {new Date().getFullYear()} PoolGuardian. All rights reserved.
+      </div>
+    </footer>
+  </body>
+</html>
