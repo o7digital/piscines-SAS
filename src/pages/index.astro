@@ -1,0 +1,49 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Hero from "../components/Hero.astro";
+import Sections from "../components/Sections.astro";
+import Pricing from "../components/Pricing.jsx";
+import Faq from "../components/Faq.jsx";
+import DemoForm from "../components/DemoForm.jsx";
+import "../styles/global.css";
+---
+<BaseLayout title="PoolGuardian - Pool Risk & Compliance Monitoring" description="Monitoring, logs, alerts and audit-ready reporting for luxury pools.">
+  <div class="nav">
+    <div class="container navInner">
+      <div style="display:flex; gap:10px; align-items:center;">
+        <div class="icon">🏊‍♂️</div>
+        <div style="font-weight:800;">PoolGuardian</div>
+        <div class="badge" style="margin-left:8px;">US-first SaaS</div>
+      </div>
+
+      <div class="navLinks">
+        <a class="small" href="#how">Product</a>
+        <a class="small" href="#pricing">Pricing</a>
+        <a class="small" href="#demo">Demo</a>
+        <a class="btn btnPrimary" href="#demo">Request a demo</a>
+      </div>
+    </div>
+  </div>
+
+  <Hero />
+  <Sections />
+
+  <Pricing client:load />
+  <DemoForm client:load />
+  <Faq client:load />
+
+  <div class="footer">
+    <div class="container">
+      <div class="hr"></div>
+      <div style="display:flex; justify-content:space-between; gap:14px; flex-wrap:wrap;">
+        <div>
+          <div style="font-weight:700;">PoolGuardian</div>
+          <div class="small">Risk & compliance monitoring platform for pools.</div>
+        </div>
+        <div class="small" style="max-width:520px;">
+          Disclaimer: PoolGuardian supports monitoring & documentation. It does not prevent drowning and does not replace certified safety systems, supervision, or local legal obligations.
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

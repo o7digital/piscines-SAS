@@ -1,0 +1,65 @@
+---
+const features = [
+  {
+    title: "Water Quality Tracking",
+    desc: "Record pH, chlorine, temperature (manual MVP). Visual trends + thresholds + alerts.",
+    icon: "🧪",
+  },
+  {
+    title: "Maintenance & Scheduling",
+    desc: "Plan cleaning/backwash/robot. Timestamped logs for teams and vendors.",
+    icon: "🛠️",
+  },
+  {
+    title: "Safety Status Checks",
+    desc: "Daily safety checklist + cover status + escalation reminders for staff.",
+    icon: "🛟",
+  },
+  {
+    title: "Compliance Reporting (PDF)",
+    desc: "Monthly audit-ready PDF exports for insurance, owners, and operations.",
+    icon: "📄",
+  },
+  {
+    title: "Multi-property Dashboard",
+    desc: "One view for portfolios: villas, hotels, HOAs, property managers.",
+    icon: "🏢",
+  },
+  {
+    title: "Alerts & Escalation",
+    desc: "Email + push alerts. SMS later. Rules per property and per role.",
+    icon: "🚨",
+  },
+];
+---
+<section id="how" class="section">
+  <div class="container">
+    <h2 class="h2">How it works</h2>
+    <p class="p">Simple MVP first: manual inputs + logs + reporting. Automation and sensors come in Phase 2.</p>
+
+    <div class="grid features" style="margin-top:16px;">
+      {features.map((f) => (
+        <div class="card featureItem">
+          <div class="icon">{f.icon}</div>
+          <div style="font-weight:700; margin-top:10px;">{f.title}</div>
+          <div class="p" style="margin-top:6px;">{f.desc}</div>
+        </div>
+      ))}
+    </div>
+
+    <div class="hr"></div>
+
+    <div class="grid" style="grid-template-columns: 1fr; gap: 16px;">
+      <div class="card" style="padding:18px;">
+        <div style="font-weight:700;">MVP Scope (6 weeks)</div>
+        <ul class="p" style="margin:10px 0 0 18px;">
+          <li>Auth + organizations + pools</li>
+          <li>Manual readings (pH, chlorine, temp) + trends</li>
+          <li>Maintenance logs + reminders</li>
+          <li>Safety checklist + cover status</li>
+          <li>Alerts (email/push) + monthly PDF report</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>

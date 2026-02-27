@@ -1,0 +1,16 @@
+---
+const { title = "PoolGuardian", description = "Pool risk & compliance monitoring platform" } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#070A12" />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
