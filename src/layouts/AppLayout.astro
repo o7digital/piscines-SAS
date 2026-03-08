@@ -1,0 +1,158 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import { properties } from "../data/mock";
+
+const { title = "Dashboard", description = "PoolGuardian operations workspace" } = Astro.props;
+const pathname = Astro.url.pathname;
+
+const navItems = [
+  { href: "/app", label: "Dashboard" },
+  { href: "/app/properties", label: "Properties" },
+  { href: "/app/logs", label: "Logs" },
+  { href: "/app/reports", label: "Reports" },
+  { href: "/app/settings", label: "Settings" },
+];
+
+const isActive = (href: string) => (href === "/app" ? pathname === href : pathname.startsWith(href));
+---
+<BaseLayout
+  title={`${title} | PoolGuardian`}
+  description={description}
+  themeColor="#020617"
+  bodyClass="bg-slate-950 text-white antialiased"
+>
+  <div class="min-h-screen lg:flex">
+    <div id="app-backdrop" class="fixed inset-0 z-40 hidden bg-slate-950/85 lg:hidden"></div>
+
+    <aside
+      id="app-sidebar"
+      class="fixed inset-y-0 left-0 z-50 flex w-80 -translate-x-full flex-col border-r border-white/10 bg-slate-950/95 px-5 py-6 transition-transform duration-200 ease-out lg:static lg:translate-x-0"
+    >
+      <div class="flex items-center justify-between">
+        <a href="/" class="flex items-center gap-3">
+          <div class="h-10 w-10 rounded-2xl border border-white/15 bg-white/10"></div>
+          <div>
+            <div class="font-display text-2xl font-semibold tracking-tight">PoolGuardian</div>
+            <div class="text-xs text-white/50">Operations console</div>
+          </div>
+        </a>
+
+        <button
+          id="nav-close"
+          type="button"
+          class="rounded-xl border border-white/10 bg-white/5 p-2 text-white/70 hover:bg-white/10 lg:hidden"
+          aria-label="Close navigation"
+        >
+          <svg viewBox="0 0 24 24" class="h-5 w-5 fill-none stroke-current" stroke-width="1.8">
+            <path d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="mt-8 rounded-3xl border border-white/10 bg-white/5 p-4">
+        <div class="text-xs uppercase tracking-[0.22em] text-white/45">Today</div>
+        <div class="mt-2 text-sm text-white/80">Daily checks, safety walk-throughs, and month-end reporting.</div>
+        <a
+          href="/app/logs/new"
+          class="mt-4 inline-flex w-full items-center justify-center rounded-2xl bg-emerald-400 px-4 py-3 text-sm font-semibold text-slate-950 hover:bg-emerald-300"
+        >
+          New daily check
+        </a>
+      </div>
+
+      <nav class="mt-8 space-y-2">
+        {navItems.map((item) => (
+          <a
+            href={item.href}
+            class:list={[
+              "flex items-center justify-between rounded-2xl border px-4 py-3 text-sm transition",
+              isActive(item.href)
+                ? "border-emerald-400/40 bg-emerald-400/10 text-white"
+                : "border-transparent bg-transparent text-white/70 hover:border-white/10 hover:bg-white/5 hover:text-white",
+            ]}
+          >
+            <span>{item.label}</span>
+            <span class="text-xs text-white/40">{item.href === "/app" ? "Home" : "Open"}</span>
+          </a>
+        ))}
+      </nav>
+
+      <div class="mt-auto rounded-3xl border border-white/10 bg-white/5 p-4 text-sm text-white/65">
+        PDF export and role-based workflows are staged next. This demo runs entirely with mock data and
+        `localStorage`.
+      </div>
+    </aside>
+
+    <div class="flex min-h-screen flex-1 flex-col lg:pl-0">
+      <header class="sticky top-0 z-30 border-b border-white/10 bg-slate-950/85 backdrop-blur">
+        <div class="flex flex-wrap items-center gap-3 px-4 py-4 sm:px-6 lg:px-8">
+          <button
+            id="nav-toggle"
+            type="button"
+            class="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-white/80 hover:bg-white/10 lg:hidden"
+            aria-label="Open navigation"
+          >
+            <svg viewBox="0 0 24 24" class="h-5 w-5 fill-none stroke-current" stroke-width="1.8">
+              <path d="M4 7h16M4 12h16M4 17h16" />
+            </svg>
+          </button>
+
+          <div class="min-w-0 flex-1">
+            <div class="text-xs uppercase tracking-[0.2em] text-white/45">Pool operations</div>
+            <div class="truncate text-sm text-white/70">Luxury portfolio compliance workspace</div>
+          </div>
+
+          <label class="w-full min-w-[220px] max-w-sm sm:w-auto">
+            <span class="sr-only">Selected property</span>
+            <select
+              class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition focus:border-emerald-400/50"
+            >
+              <option value="all">All properties</option>
+              {properties.map((property) => (
+                <option value={property.id}>{property.name}</option>
+              ))}
+            </select>
+          </label>
+
+          <a
+            href="/app/logs/new"
+            class="inline-flex items-center justify-center rounded-2xl bg-emerald-400 px-4 py-3 text-sm font-semibold text-slate-950 hover:bg-emerald-300"
+          >
+            New daily check
+          </a>
+        </div>
+      </header>
+
+      <main class="flex-1 px-4 py-6 sm:px-6 lg:px-8">
+        <slot />
+      </main>
+    </div>
+  </div>
+
+  <script is:inline>
+    const sidebar = document.querySelector("#app-sidebar");
+    const backdrop = document.querySelector("#app-backdrop");
+    const openButton = document.querySelector("#nav-toggle");
+    const closeButton = document.querySelector("#nav-close");
+
+    const openSidebar = () => {
+      sidebar?.classList.remove("-translate-x-full");
+      backdrop?.classList.remove("hidden");
+      document.body.classList.add("overflow-hidden");
+    };
+
+    const closeSidebar = () => {
+      sidebar?.classList.add("-translate-x-full");
+      backdrop?.classList.add("hidden");
+      document.body.classList.remove("overflow-hidden");
+    };
+
+    openButton?.addEventListener("click", openSidebar);
+    closeButton?.addEventListener("click", closeSidebar);
+    backdrop?.addEventListener("click", closeSidebar);
+
+    for (const link of document.querySelectorAll("#app-sidebar a")) {
+      link.addEventListener("click", closeSidebar);
+    }
+  </script>
+</BaseLayout>

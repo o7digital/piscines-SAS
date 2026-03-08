@@ -1,0 +1,56 @@
+---
+import { properties } from "../../data/mock";
+import AppLayout from "../../layouts/AppLayout.astro";
+
+const monthlyReports = properties.map((property, index) => ({
+  id: `report-${property.id}`,
+  propertyName: property.name,
+  period: "March 2026",
+  status: index < 3 ? "Ready" : "In review",
+  updatedAt: index < 2 ? "Updated 2h ago" : index === 2 ? "Updated this morning" : "Awaiting sign-off",
+}));
+---
+<AppLayout title="Reports" description="Monthly compliance reports">
+  <section class="space-y-6">
+    <div class="max-w-3xl">
+      <p class="text-xs uppercase tracking-[0.2em] text-white/45">Owner reporting</p>
+      <h1 class="mt-2 text-3xl font-semibold tracking-tight text-white md:text-4xl">Reports</h1>
+      <p class="mt-3 text-white/70">
+        Monthly reports are staged here for manager review. PDF export will be enabled once backend
+        automation is connected.
+      </p>
+    </div>
+
+    <div class="space-y-4">
+      {monthlyReports.map((report) => (
+        <article class="flex flex-col gap-4 rounded-3xl border border-white/10 bg-white/5 p-6 md:flex-row md:items-center md:justify-between">
+          <div>
+            <p class="text-xs uppercase tracking-[0.18em] text-white/45">{report.period}</p>
+            <h2 class="mt-2 text-xl font-semibold tracking-tight text-white">{report.propertyName}</h2>
+            <p class="mt-2 text-sm text-white/60">{report.updatedAt}</p>
+          </div>
+
+          <div class="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
+            <span
+              class:list={[
+                "rounded-full px-3 py-1 text-xs font-semibold",
+                report.status === "Ready"
+                  ? "bg-emerald-400/10 text-emerald-200"
+                  : "bg-white/10 text-white/70",
+              ]}
+            >
+              {report.status}
+            </span>
+            <button
+              type="button"
+              disabled
+              class="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-white/40"
+            >
+              Export PDF
+            </button>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+</AppLayout>

@@ -1,16 +1,24 @@
 ---
-const { title = "PoolGuardian", description = "Pool risk & compliance monitoring platform" } = Astro.props;
+import "../styles/global.css";
+
+const {
+  title = "PoolGuardian",
+  description = "Pool risk & compliance monitoring platform",
+  themeColor = "#070A12",
+  lang = "en",
+  bodyClass = "",
+} = Astro.props;
 ---
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#070A12" />
+    <meta name="theme-color" content={themeColor} />
   </head>
-  <body>
+  <body class={bodyClass}>
     <slot />
   </body>
 </html>

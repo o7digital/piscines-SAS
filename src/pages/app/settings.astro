@@ -1,0 +1,75 @@
+---
+import { thresholds } from "../../lib/monitoring";
+import AppLayout from "../../layouts/AppLayout.astro";
+---
+<AppLayout title="Settings" description="Workspace settings">
+  <section class="space-y-6">
+    <div class="max-w-3xl">
+      <p class="text-xs uppercase tracking-[0.2em] text-white/45">Workspace configuration</p>
+      <h1 class="mt-2 text-3xl font-semibold tracking-tight text-white md:text-4xl">Settings</h1>
+      <p class="mt-3 text-white/70">
+        Core operating thresholds and collaboration settings for the MVP. Team roles and automated
+        notifications are staged as follow-up features.
+      </p>
+    </div>
+
+    <div class="grid gap-4 xl:grid-cols-3">
+      <article class="rounded-3xl border border-white/10 bg-white/5 p-6">
+        <p class="text-xs uppercase tracking-[0.18em] text-white/45">Team</p>
+        <h2 class="mt-2 text-xl font-semibold tracking-tight text-white">Access control</h2>
+        <p class="mt-3 text-sm leading-6 text-white/65">
+          Role-based access is coming soon. Managers, operators, and vendors will each get scoped views and
+          approval flows.
+        </p>
+      </article>
+
+      <article class="rounded-3xl border border-white/10 bg-white/5 p-6 xl:col-span-2">
+        <p class="text-xs uppercase tracking-[0.18em] text-white/45">Thresholds</p>
+        <h2 class="mt-2 text-xl font-semibold tracking-tight text-white">Water quality targets</h2>
+        <div class="mt-5 grid gap-4 sm:grid-cols-2">
+          <label class="space-y-2">
+            <span class="text-sm text-white/75">pH minimum</span>
+            <input
+              type="number"
+              value={thresholds.phMin}
+              class="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-white outline-none"
+            />
+          </label>
+          <label class="space-y-2">
+            <span class="text-sm text-white/75">pH maximum</span>
+            <input
+              type="number"
+              value={thresholds.phMax}
+              class="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-white outline-none"
+            />
+          </label>
+          <label class="space-y-2">
+            <span class="text-sm text-white/75">Chlorine minimum</span>
+            <input
+              type="number"
+              value={thresholds.chlorineMin}
+              class="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-white outline-none"
+            />
+          </label>
+          <label class="space-y-2">
+            <span class="text-sm text-white/75">Chlorine maximum</span>
+            <input
+              type="number"
+              value={thresholds.chlorineMax}
+              class="w-full rounded-2xl border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-white outline-none"
+            />
+          </label>
+        </div>
+      </article>
+
+      <article class="rounded-3xl border border-white/10 bg-white/5 p-6 xl:col-span-3">
+        <p class="text-xs uppercase tracking-[0.18em] text-white/45">Notifications</p>
+        <h2 class="mt-2 text-xl font-semibold tracking-tight text-white">Dispatch channels</h2>
+        <p class="mt-3 text-sm leading-6 text-white/65">
+          Email and SMS escalation rules are coming soon. The backend connector will dispatch chemistry and
+          safety exceptions to the right team once it is enabled.
+        </p>
+      </article>
+    </div>
+  </section>
+</AppLayout>

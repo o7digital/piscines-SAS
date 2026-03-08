@@ -1,0 +1,84 @@
+---
+import { logs, pools, properties } from "../../data/mock";
+import { formatDateTime, getPropertyHealth, getPropertyLastCheck } from "../../lib/monitoring";
+import AppLayout from "../../layouts/AppLayout.astro";
+
+const propertyCards = properties.map((property) => {
+  const propertyPools = pools.filter((pool) => pool.propertyId === property.id);
+  const lastCheck = getPropertyLastCheck(property.id, logs);
+  const status = getPropertyHealth(property, pools, logs);
+
+  return {
+    ...property,
+    poolCount: propertyPools.length,
+    lastCheck,
+    status,
+  };
+});
+---
+<AppLayout title="Properties" description="Property portfolio">
+  <section class="space-y-6">
+    <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+      <div class="max-w-3xl">
+        <p class="text-xs uppercase tracking-[0.2em] text-white/45">Portfolio</p>
+        <h1 class="mt-2 text-3xl font-semibold tracking-tight text-white md:text-4xl">Properties</h1>
+        <p class="mt-3 text-white/70">
+          Portfolio-level visibility for each asset, its active pools, and the latest recorded check.
+        </p>
+      </div>
+
+      <label class="w-full max-w-md">
+        <span class="sr-only">Search properties</span>
+        <input
+          type="search"
+          placeholder="Search properties, cities, or managers"
+          class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/35 focus:border-emerald-400/40"
+        />
+      </label>
+    </div>
+
+    <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+      {propertyCards.map((property) => (
+        <article class="rounded-3xl border border-white/10 bg-white/5 p-6">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <h2 class="text-xl font-semibold tracking-tight text-white">{property.name}</h2>
+              <p class="mt-2 text-sm text-white/60">
+                {property.city}, {property.country}
+              </p>
+            </div>
+            <span
+              class:list={[
+                "rounded-full px-3 py-1 text-xs font-semibold",
+                property.status === "ok"
+                  ? "bg-emerald-400/10 text-emerald-200"
+                  : "bg-amber-400/10 text-amber-200",
+              ]}
+            >
+              {property.status === "ok" ? "OK" : "Attention"}
+            </span>
+          </div>
+
+          <div class="mt-6 grid gap-3 sm:grid-cols-2">
+            <div class="rounded-2xl border border-white/10 bg-slate-950/45 p-4">
+              <div class="text-xs uppercase tracking-[0.18em] text-white/45">Pools</div>
+              <div class="mt-2 text-2xl font-semibold text-white">{property.poolCount}</div>
+            </div>
+            <div class="rounded-2xl border border-white/10 bg-slate-950/45 p-4">
+              <div class="text-xs uppercase tracking-[0.18em] text-white/45">Last check</div>
+              <div class="mt-2 text-sm font-semibold text-white">
+                {property.lastCheck ? formatDateTime(property.lastCheck.createdAt) : "No check yet"}
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-6 border-t border-white/10 pt-4 text-sm text-white/65">
+            {property.status === "ok"
+              ? "Operations are within range. Continue routine daily checks."
+              : "One or more pools need follow-up before the next guest opening window."}
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+</AppLayout>

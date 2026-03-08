@@ -1,21 +1,14 @@
 ---
-import "../styles/global.css";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
 const HERO_IMAGE = "/Gemini_Generated_Image_aw8b9saw8b9saw8b.png";
 ---
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>PoolGuardian - Pool Safety & Water Quality Monitoring</title>
-    <meta
-      name="description"
-      content="Daily checks, water tests, maintenance logs, alerts, and audit-ready reports for luxury pools."
-    />
-    <meta name="theme-color" content="#020617" />
-  </head>
-
-  <body class="bg-slate-950 text-white antialiased">
+<BaseLayout
+  title="PoolGuardian - Pool Safety & Water Quality Monitoring"
+  description="Daily checks, water tests, maintenance logs, alerts, and audit-ready reports for luxury pools."
+  themeColor="#020617"
+  bodyClass="bg-slate-950 text-white antialiased"
+>
     <header class="sticky top-0 z-50 border-b border-white/10 bg-slate-950/60 backdrop-blur">
       <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
         <div class="flex items-center gap-3">
@@ -30,6 +23,7 @@ const HERO_IMAGE = "/Gemini_Generated_Image_aw8b9saw8b9saw8b.png";
           <a class="hover:text-white" href="#product">Product</a>
           <a class="hover:text-white" href="#how">How it works</a>
           <a class="hover:text-white" href="#pricing">Pricing</a>
+          <a class="hover:text-white" href="/app">Demo dashboard</a>
         </nav>
 
         <a
@@ -78,7 +72,7 @@ const HERO_IMAGE = "/Gemini_Generated_Image_aw8b9saw8b9saw8b.png";
               Request a demo
             </a>
             <a
-              href="#product"
+              href="/app"
               class="rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10"
             >
               See the product
@@ -202,5 +196,4 @@ const HERO_IMAGE = "/Gemini_Generated_Image_aw8b9saw8b9saw8b.png";
         &copy; {new Date().getFullYear()} PoolGuardian. All rights reserved.
       </div>
     </footer>
-  </body>
-</html>
+</BaseLayout>
