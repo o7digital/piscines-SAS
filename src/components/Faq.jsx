@@ -2,8 +2,8 @@ import React, { useState } from "react";
 
 const faqs = [
   {
-    q: "Does it prevent drowning?",
-    a: "No. PoolGuardian supports monitoring, alerts, and documentation. It does not replace certified safety systems or supervision.",
+    q: "Does it replace lifeguards or onsite teams?",
+    a: "No. Pool Link supports monitoring, alerts, and documentation. It does not replace onsite teams, lifeguards, or operating procedures.",
   },
   {
     q: "Do we need sensors?",
@@ -15,7 +15,7 @@ const faqs = [
   },
   {
     q: "What makes it investor-ready?",
-    a: "US-first positioning: risk mitigation + compliance logs + reporting — highly scalable SaaS without hardware at first.",
+    a: "US-first positioning: operations control + standards logs + reporting — highly scalable SaaS without hardware at first.",
   },
 ];
 

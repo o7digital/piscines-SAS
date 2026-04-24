@@ -32,15 +32,15 @@ export function isWaterAttention(log: LogEntry): boolean {
   );
 }
 
-export function isSafetyAttention(log: LogEntry): boolean {
+export function isOperationalAttention(log: LogEntry): boolean {
   return log.coverOpen || !log.gateLocked || !log.signageOk;
 }
 
 export function isLogAttention(log: LogEntry): boolean {
-  return isWaterAttention(log) || isSafetyAttention(log);
+  return isWaterAttention(log) || isOperationalAttention(log);
 }
 
-export function getSafetyFlags(log: LogEntry): string[] {
+export function getOperationalFlags(log: LogEntry): string[] {
   const flags: string[] = [];
 
   if (log.coverOpen) {

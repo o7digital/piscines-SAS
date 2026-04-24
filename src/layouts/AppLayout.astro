@@ -2,7 +2,7 @@
 import BaseLayout from "./BaseLayout.astro";
 import { properties } from "../data/mock";
 
-const { title = "Dashboard", description = "PoolGuardian operations workspace" } = Astro.props;
+const { title = "Dashboard", description = "Pool Link operations workspace" } = Astro.props;
 const pathname = Astro.url.pathname;
 
 const navItems = [
@@ -16,7 +16,7 @@ const navItems = [
 const isActive = (href: string) => (href === "/app" ? pathname === href : pathname.startsWith(href));
 ---
 <BaseLayout
-  title={`${title} | PoolGuardian`}
+  title={`${title} | Pool Link`}
   description={description}
   themeColor="#020617"
   bodyClass="bg-slate-950 text-white antialiased"
@@ -32,7 +32,7 @@ const isActive = (href: string) => (href === "/app" ? pathname === href : pathna
         <a href="/" class="flex items-center gap-3">
           <div class="h-10 w-10 rounded-2xl border border-white/15 bg-white/10"></div>
           <div>
-            <div class="font-display text-2xl font-semibold tracking-tight">PoolGuardian</div>
+            <div class="font-display text-2xl font-semibold tracking-tight">Pool Link</div>
             <div class="text-xs text-white/50">Operations console</div>
           </div>
         </a>
@@ -51,7 +51,7 @@ const isActive = (href: string) => (href === "/app" ? pathname === href : pathna
 
       <div class="mt-8 rounded-3xl border border-white/10 bg-white/5 p-4">
         <div class="text-xs uppercase tracking-[0.22em] text-white/45">Today</div>
-        <div class="mt-2 text-sm text-white/80">Daily checks, safety walk-throughs, and month-end reporting.</div>
+        <div class="mt-2 text-sm text-white/80">Daily checks, operations walk-throughs, and month-end reporting.</div>
         <a
           href="/app/logs/new"
           class="mt-4 inline-flex w-full items-center justify-center rounded-2xl bg-emerald-400 px-4 py-3 text-sm font-semibold text-slate-950 hover:bg-emerald-300"

@@ -1,7 +1,7 @@
 import { logs as mockLogs, type LogEntry } from "../data/mock";
 import { sortLogsDesc } from "./monitoring";
 
-const STORAGE_KEY = "poolguardian.logs";
+const STORAGE_KEY = "pool-link.logs";
 
 const cloneMockLogs = () => sortLogsDesc(mockLogs.map((entry) => ({ ...entry })));
 
