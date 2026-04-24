@@ -230,7 +230,7 @@ export default function NewLogForm({ properties, pools }: NewLogFormProps) {
       </label>
 
       <div className="rounded-3xl border border-white/10 bg-slate-950/45 p-5">
-        <div className="text-sm font-medium text-white/80">Safety checks</div>
+        <div className="text-sm font-medium text-white/80">Operational checks</div>
         <div className="mt-4 grid gap-3 md:grid-cols-3">
           <label className="inline-flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/75">
             <input

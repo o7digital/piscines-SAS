@@ -4,7 +4,7 @@ import type { Alert, LogEntry, Pool, Property } from "../../data/mock";
 import {
   formatDateTime,
   getDashboardStats,
-  getSafetyFlags,
+  getOperationalFlags,
   isLogAttention,
   sortLogsDesc,
 } from "../../lib/monitoring";
@@ -41,10 +41,10 @@ export default function DashboardOverview({
   const stats = getDashboardStats(pools, logs);
 
   function getStatusLabel(log: LogEntry) {
-    const safetyFlags = getSafetyFlags(log);
-    return safetyFlags[0] === "All checks passed" && isLogAttention(log)
+    const operationalFlags = getOperationalFlags(log);
+    return operationalFlags[0] === "All checks passed" && isLogAttention(log)
       ? "Chemistry alert"
-      : safetyFlags.join(", ");
+      : operationalFlags.join(", ");
   }
 
   return (
@@ -53,12 +53,12 @@ export default function DashboardOverview({
         <article className="rounded-3xl border border-white/10 bg-white/5 p-6">
           <div className="text-sm text-white/60">Pools OK</div>
           <div className="mt-3 text-3xl font-semibold tracking-tight text-white">{stats.poolsOk}</div>
-          <p className="mt-2 text-sm text-white/65">Latest chemistry and safety checks are within target.</p>
+          <p className="mt-2 text-sm text-white/65">Latest chemistry and operational checks are within target.</p>
         </article>
         <article className="rounded-3xl border border-white/10 bg-white/5 p-6">
           <div className="text-sm text-white/60">Needs attention</div>
           <div className="mt-3 text-3xl font-semibold tracking-tight text-white">{stats.needsAttention}</div>
-          <p className="mt-2 text-sm text-white/65">Out-of-range chemistry or unresolved safety actions.</p>
+          <p className="mt-2 text-sm text-white/65">Out-of-range chemistry or unresolved operational actions.</p>
         </article>
         <article className="rounded-3xl border border-white/10 bg-white/5 p-6">
           <div className="text-sm text-white/60">Overdue checks</div>
@@ -125,7 +125,7 @@ export default function DashboardOverview({
                   <th className="border-b border-white/10 pb-3 pr-4 font-medium">Property</th>
                   <th className="border-b border-white/10 pb-3 pr-4 font-medium">Pool</th>
                   <th className="border-b border-white/10 pb-3 pr-4 font-medium">Chemistry</th>
-                  <th className="border-b border-white/10 pb-3 font-medium">Safety</th>
+                  <th className="border-b border-white/10 pb-3 font-medium">Operations</th>
                 </tr>
               </thead>
               <tbody>

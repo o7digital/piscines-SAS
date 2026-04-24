@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import type { LogEntry, Pool, Property } from "../../data/mock";
-import { formatDateTime, getSafetyFlags, isLogAttention, sortLogsDesc } from "../../lib/monitoring";
+import { formatDateTime, getOperationalFlags, isLogAttention, sortLogsDesc } from "../../lib/monitoring";
 import { loadLogs } from "../../lib/storage";
 
 type LogsTableProps = {
@@ -105,7 +105,7 @@ export default function LogsTable({
                 <th className="border-b border-white/10 pb-3 pr-4 font-medium">Temp</th>
                 <th className="border-b border-white/10 pb-3 pr-4 font-medium">pH</th>
                 <th className="border-b border-white/10 pb-3 pr-4 font-medium">Chlorine</th>
-                <th className="border-b border-white/10 pb-3 pr-4 font-medium">Safety flags</th>
+                <th className="border-b border-white/10 pb-3 pr-4 font-medium">Operational flags</th>
                 <th className="border-b border-white/10 pb-3 font-medium">Notes</th>
               </tr>
             </thead>
@@ -131,7 +131,7 @@ export default function LogsTable({
                           : "bg-emerald-400/10 text-emerald-200"
                       }`}
                     >
-                      {getSafetyFlags(log).join(", ")}
+                      {getOperationalFlags(log).join(", ")}
                     </span>
                   </td>
                   <td className="border-b border-white/5 py-4 text-white/65">

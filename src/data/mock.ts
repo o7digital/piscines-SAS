@@ -60,8 +60,8 @@ export const alerts: Alert[] = [
     id: "alert-1",
     propertyId: "prop-miami",
     severity: "critical",
-    title: "Gate left unlocked after morning check",
-    detail: "Main Deck Pool needs a follow-up safety walk before guest access is reopened.",
+    title: "Morning close checklist incomplete",
+    detail: "Main Deck Pool needs a follow-up operations review before guest access is reopened.",
     createdAt: "2026-03-08T09:18:00.000Z",
   },
   {

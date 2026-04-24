@@ -22,7 +22,7 @@ const plans = [
     items: [
       "Multi-user (owner/staff/vendor)",
       "Portfolio dashboard",
-      "Safety checklist + status",
+      "Operational checklist + status",
       "Monthly PDF reports",
       "Priority support",
     ],
