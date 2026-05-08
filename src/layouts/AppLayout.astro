@@ -2,7 +2,7 @@
 import BaseLayout from "./BaseLayout.astro";
 import { properties } from "../data/mock";
 
-const { title = "Dashboard", description = "Pool Link operations workspace" } = Astro.props;
+const { title = "Dashboard", description = "Bluu operations workspace" } = Astro.props;
 const pathname = Astro.url.pathname;
 
 const navItems = [
@@ -16,7 +16,7 @@ const navItems = [
 const isActive = (href: string) => (href === "/app" ? pathname === href : pathname.startsWith(href));
 ---
 <BaseLayout
-  title={`${title} | Pool Link`}
+  title={`${title} | Bluu`}
   description={description}
   themeColor="#020617"
   bodyClass="bg-slate-950 text-white antialiased"
@@ -32,7 +32,7 @@ const isActive = (href: string) => (href === "/app" ? pathname === href : pathna
         <a href="/" class="flex items-center gap-3">
           <div class="h-10 w-10 rounded-2xl border border-white/15 bg-white/10"></div>
           <div>
-            <div class="font-display text-2xl font-semibold tracking-tight">Pool Link</div>
+            <div class="font-display text-2xl font-semibold tracking-tight">Bluu</div>
             <div class="text-xs text-white/50">Operations console</div>
           </div>
         </a>

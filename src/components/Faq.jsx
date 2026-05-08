@@ -3,7 +3,7 @@ import React, { useState } from "react";
 const faqs = [
   {
     q: "Does it replace lifeguards or onsite teams?",
-    a: "No. Pool Link supports monitoring, alerts, and documentation. It does not replace onsite teams, lifeguards, or operating procedures.",
+    a: "No. Bluu supports monitoring, alerts, and documentation. It does not replace onsite teams, lifeguards, or operating procedures.",
   },
   {
     q: "Do we need sensors?",

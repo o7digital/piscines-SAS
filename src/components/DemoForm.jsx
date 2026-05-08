@@ -16,7 +16,7 @@ export default function DemoForm() {
 
   const mailtoHref = useMemo(() => {
     const to = "demo@yourdomain.com";
-    const subject = encodeURIComponent("Pool Link - Demo request");
+    const subject = encodeURIComponent("Bluu - Demo request");
     const body = encodeURIComponent(
       [
         `Name: ${form.name}`,
