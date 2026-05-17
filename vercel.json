@@ -2,5 +2,11 @@
   "buildCommand": "npm run build",
   "framework": "astro",
   "installCommand": "npm install",
-  "outputDirectory": "dist"
+  "outputDirectory": "dist",
+  "experimentalServices": {
+    "web": {
+      "routePrefix": "/",
+      "framework": "astro"
+    }
+  }
 }
