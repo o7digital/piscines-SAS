@@ -14,9 +14,10 @@ export const POST: APIRoute = async ({ request }) => {
 
   if (hasDatabase()) {
     await query(
-      `insert into pools (id, name, location, owner_id, provider_id, volume, treatment_type, status)
-       values ($1,$2,$3,$4,$5,$6,$7,$8)`,
-      [id, body.name, body.location, body.owner_id, body.provider_id, body.volume, body.treatment_type, body.status ?? "ok"],
+      `insert into pools (id, property_id, name, location, owner_id, provider_id, volume, treatment_type, status)
+       values ($1,$2,$3,$4,$5,$6,$7,$8,$9)
+       on conflict (id) do update set property_id = excluded.property_id, name = excluded.name, location = excluded.location, owner_id = excluded.owner_id, provider_id = excluded.provider_id, volume = excluded.volume, treatment_type = excluded.treatment_type, status = excluded.status`,
+      [id, body.property_id, body.name, body.location, body.owner_id, body.provider_id, Number(body.volume), body.treatment_type, body.status ?? "ok"],
     );
   }
 

@@ -13,12 +13,13 @@ const alerts = providerPools.filter((pool: any) => pool.status !== "ok");
     <div><p class="text-xs uppercase tracking-[0.2em] text-white/45">B2B</p><h1 class="mt-2 text-3xl font-semibold">Dashboard pisciniste</h1><p class="mt-3 text-white/70">Pilotage portefeuille, alertes, clients, piscines et interventions planifiées.</p></div>
     <div class="grid gap-4 md:grid-cols-4">
       <article class="rounded-3xl border border-white/10 bg-white/5 p-6"><div class="text-sm text-white/60">Piscines</div><div class="mt-3 text-3xl font-semibold">{providerPools.length}</div></article>
-      <article class="rounded-3xl border border-white/10 bg-white/5 p-6"><div class="text-sm text-white/60">Clients</div><div class="mt-3 text-3xl font-semibold">{owners.length}</div></article>
+      <article class="rounded-3xl border border-white/10 bg-white/5 p-6"><div class="text-sm text-white/60">Propriétés</div><div class="mt-3 text-3xl font-semibold">{data.properties.length}</div></article>
       <article class="rounded-3xl border border-white/10 bg-white/5 p-6"><div class="text-sm text-white/60">Alertes</div><div class="mt-3 text-3xl font-semibold">{alerts.length}</div></article>
       <article class="rounded-3xl border border-white/10 bg-white/5 p-6"><div class="text-sm text-white/60">Interventions</div><div class="mt-3 text-3xl font-semibold">{data.interventions.length}</div></article>
     </div>
-    <div class="grid gap-6 xl:grid-cols-2">
+    <div class="grid gap-6 xl:grid-cols-3">
       <article class="rounded-3xl border border-white/10 bg-white/5 p-6"><h2 class="text-2xl font-semibold">Liste piscines</h2><div class="mt-5 space-y-3">{providerPools.map((pool: any) => <a href={`/app/passport?pool=${pool.id}`} class="block rounded-2xl border border-white/10 bg-slate-950/45 p-4"><div class="font-semibold">{pool.name}</div><div class="text-sm text-white/60">{pool.location} - {pool.status}</div></a>)}</div></article>
+      <article class="rounded-3xl border border-white/10 bg-white/5 p-6"><h2 class="text-2xl font-semibold">Checks récents</h2><div class="mt-5 space-y-3">{data.operationalChecks.slice(0, 5).map((item: any) => { const pool = data.pools.find((pool: any) => pool.id === item.pool_id); return <div class="rounded-2xl border border-white/10 bg-slate-950/45 p-4"><div class="font-semibold">{pool?.name}</div><div class="text-sm text-white/60">{item.status} - {item.notes}</div></div>; })}</div></article>
       <article class="rounded-3xl border border-white/10 bg-white/5 p-6"><h2 class="text-2xl font-semibold">Interventions planifiées</h2><div class="mt-5 space-y-3">{data.interventions.map((item: any) => <div class="rounded-2xl border border-white/10 bg-slate-950/45 p-4"><div class="font-semibold">{item.type}</div><div class="text-sm text-white/60">{new Date(item.scheduled_at).toLocaleString("fr-FR")} - {item.status}</div></div>)}</div></article>
     </div>
   </section>

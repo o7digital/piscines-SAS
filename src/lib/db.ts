@@ -30,16 +30,19 @@ export async function query<T = Record<string, unknown>>(sql: string, params: un
 export async function getAppData() {
   if (!hasDatabase()) return mvpData;
 
-  const [users, pools, measurements, interventions, ecoScores, poolPassports] = await Promise.all([
+  const [users, properties, pools, measurements, operationalChecks, interventions, ecoScores, poolPassports, reports] = await Promise.all([
     query("select * from users order by created_at asc"),
+    query("select * from properties order by created_at asc"),
     query("select * from pools order by created_at asc"),
     query("select * from measurements order by measured_at desc"),
+    query("select * from operational_checks order by checked_at desc"),
     query("select * from interventions order by scheduled_at asc"),
     query("select * from eco_scores order by created_at desc"),
     query("select * from pool_passports order by created_at desc"),
+    query("select * from reports order by created_at desc"),
   ]);
 
-  return { users, pools, measurements, interventions, ecoScores, poolPassports };
+  return { users, properties, pools, measurements, operationalChecks, interventions, ecoScores, poolPassports, reports };
 }
 
 export async function refreshEcoScore(poolId: string) {

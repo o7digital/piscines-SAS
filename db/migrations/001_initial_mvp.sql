@@ -20,7 +20,7 @@ create table if not exists properties (
 
 create table if not exists pools (
   id text primary key,
-  property_id text not null references properties(id) on delete cascade,
+  property_id text references properties(id) on delete cascade,
   name text not null,
   location text not null,
   owner_id text not null references users(id),
@@ -30,6 +30,8 @@ create table if not exists pools (
   status text not null default 'ok',
   created_at timestamptz not null default now()
 );
+
+alter table pools add column if not exists property_id text references properties(id) on delete cascade;
 
 create table if not exists measurements (
   id text primary key,

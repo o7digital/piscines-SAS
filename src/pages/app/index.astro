@@ -4,6 +4,7 @@ import { getAppData } from "../../lib/db";
 
 const data = await getAppData();
 const latestMeasurements = data.measurements.slice(0, 6);
+const latestChecks = data.operationalChecks.slice(0, 4);
 const criticalPools = data.pools.filter((pool: any) => pool.status !== "ok");
 const today = new Date().toISOString().slice(0, 10);
 const todayInterventions = data.interventions.filter((item: any) => String(item.scheduled_at).slice(0, 10) === today);
@@ -17,13 +18,13 @@ const todayInterventions = data.interventions.filter((item: any) => String(item.
     </div>
 
     <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-      <article class="rounded-3xl border border-white/10 bg-white/5 p-6"><div class="text-sm text-white/60">Piscines suivies</div><div class="mt-3 text-3xl font-semibold">{data.pools.length}</div></article>
+      <article class="rounded-3xl border border-white/10 bg-white/5 p-6"><div class="text-sm text-white/60">Propriétés</div><div class="mt-3 text-3xl font-semibold">{data.properties.length}</div></article>
       <article class="rounded-3xl border border-white/10 bg-white/5 p-6"><div class="text-sm text-white/60">Alertes actives</div><div class="mt-3 text-3xl font-semibold">{criticalPools.length}</div></article>
       <article class="rounded-3xl border border-white/10 bg-white/5 p-6"><div class="text-sm text-white/60">Interventions du jour</div><div class="mt-3 text-3xl font-semibold">{todayInterventions.length}</div></article>
       <article class="rounded-3xl border border-white/10 bg-white/5 p-6"><div class="text-sm text-white/60">Utilisateurs</div><div class="mt-3 text-3xl font-semibold">{data.users.length}</div></article>
     </div>
 
-    <div class="grid gap-6 xl:grid-cols-2">
+    <div class="grid gap-6 xl:grid-cols-3">
       <article class="rounded-3xl border border-white/10 bg-white/5 p-6">
         <h2 class="text-2xl font-semibold">Dernières mesures</h2>
         <div class="mt-5 space-y-3">
@@ -32,6 +33,18 @@ const todayInterventions = data.interventions.filter((item: any) => String(item.
             return <div class="rounded-2xl border border-white/10 bg-slate-950/45 p-4 text-sm text-white/75">
               <div class="font-semibold text-white">{pool?.name}</div>
               <div class="mt-1">pH {item.ph} / chlore {item.chlorine} / {item.temperature} C</div>
+            </div>;
+          })}
+        </div>
+      </article>
+      <article class="rounded-3xl border border-white/10 bg-white/5 p-6">
+        <h2 class="text-2xl font-semibold">Derniers checks</h2>
+        <div class="mt-5 space-y-3">
+          {latestChecks.map((item: any) => {
+            const pool = data.pools.find((pool: any) => pool.id === item.pool_id);
+            return <div class="rounded-2xl border border-white/10 bg-slate-950/45 p-4 text-sm text-white/75">
+              <div class="font-semibold text-white">{pool?.name}</div>
+              <div class="mt-1">{item.status} - {item.notes}</div>
             </div>;
           })}
         </div>

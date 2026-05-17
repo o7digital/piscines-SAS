@@ -1,8 +1,14 @@
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import pg from "pg";
 
 const command = process.argv[2];
-const file = command === "seed" ? "db/seed.sql" : "db/schema.sql";
+const files =
+  command === "seed"
+    ? ["db/seed.sql"]
+    : readdirSync("db/migrations")
+        .filter((file) => file.endsWith(".sql"))
+        .sort()
+        .map((file) => `db/migrations/${file}`);
 
 if (!process.env.DATABASE_URL) {
   console.error("DATABASE_URL is required.");
@@ -15,7 +21,8 @@ const client = new pg.Client({
 });
 
 await client.connect();
-await client.query(readFileSync(file, "utf8"));
+for (const file of files) {
+  await client.query(readFileSync(file, "utf8"));
+  console.log(`${file} applied.`);
+}
 await client.end();
-
-console.log(`${file} applied.`);

@@ -11,5 +11,6 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   if (!user) return json({ error: "Utilisateur inconnu." }, 401);
 
   cookies.set("bluu3_user", user.id, { path: "/", sameSite: "lax" });
-  return json({ user });
+  const redirectTo = user.role === "owner" ? "/app/owner" : user.role === "admin" ? "/app/admin" : "/app/provider";
+  return json({ user, redirectTo });
 };
