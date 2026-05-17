@@ -1,22 +1,27 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
-import { properties } from "../data/mock";
+import { getAppData } from "../lib/db";
 
-const { title = "Dashboard", description = "Bluu operations workspace" } = Astro.props;
+const { title = "Dashboard", description = "Bluu3 operations workspace" } = Astro.props;
 const pathname = Astro.url.pathname;
+const data = await getAppData();
 
 const navItems = [
-  { href: "/app", label: "Dashboard" },
-  { href: "/app/properties", label: "Properties" },
-  { href: "/app/logs", label: "Logs" },
-  { href: "/app/reports", label: "Reports" },
-  { href: "/app/settings", label: "Settings" },
+  { href: "/app", label: "Vue globale" },
+  { href: "/app/provider", label: "Pisciniste" },
+  { href: "/app/owner", label: "Propriétaire" },
+  { href: "/app/pools", label: "Piscines" },
+  { href: "/app/measurements", label: "Mesures" },
+  { href: "/app/interventions", label: "Interventions" },
+  { href: "/app/passport", label: "Pool Passport" },
+  { href: "/app/eco-score", label: "Eco-Score" },
+  { href: "/app/admin", label: "Admin" },
 ];
 
 const isActive = (href: string) => (href === "/app" ? pathname === href : pathname.startsWith(href));
 ---
 <BaseLayout
-  title={`${title} | Bluu`}
+  title={`${title} | Bluu3`}
   description={description}
   themeColor="#020617"
   bodyClass="bg-slate-950 text-white antialiased"
@@ -32,8 +37,8 @@ const isActive = (href: string) => (href === "/app" ? pathname === href : pathna
         <a href="/" class="flex items-center gap-3">
           <div class="h-10 w-10 rounded-2xl border border-white/15 bg-white/10"></div>
           <div>
-            <div class="font-display text-2xl font-semibold tracking-tight">Bluu</div>
-            <div class="text-xs text-white/50">Operations console</div>
+            <div class="font-display text-2xl font-semibold tracking-tight">Bluu3</div>
+            <div class="text-xs text-white/50">MVP v1 console</div>
           </div>
         </a>
 
@@ -50,13 +55,13 @@ const isActive = (href: string) => (href === "/app" ? pathname === href : pathna
       </div>
 
       <div class="mt-8 rounded-3xl border border-white/10 bg-white/5 p-4">
-        <div class="text-xs uppercase tracking-[0.22em] text-white/45">Today</div>
-        <div class="mt-2 text-sm text-white/80">Daily checks, operations walk-throughs, and month-end reporting.</div>
+        <div class="text-xs uppercase tracking-[0.22em] text-white/45">Aujourd'hui</div>
+        <div class="mt-2 text-sm text-white/80">Mesures, interventions, Eco-Score MVP et Pool Passport.</div>
         <a
-          href="/app/logs/new"
+          href="/app/measurements"
           class="mt-4 inline-flex w-full items-center justify-center rounded-2xl bg-emerald-400 px-4 py-3 text-sm font-semibold text-slate-950 hover:bg-emerald-300"
         >
-          New daily check
+          Nouvelle mesure
         </a>
       </div>
 
@@ -78,8 +83,7 @@ const isActive = (href: string) => (href === "/app" ? pathname === href : pathna
       </nav>
 
       <div class="mt-auto rounded-3xl border border-white/10 bg-white/5 p-4 text-sm text-white/65">
-        PDF export and role-based workflows are staged next. This demo runs entirely with mock data and
-        `localStorage`.
+        Mode MVP : PostgreSQL Railway via `DATABASE_URL`, avec données seed locales quand la base n'est pas configurée.
       </div>
     </aside>
 
@@ -98,8 +102,8 @@ const isActive = (href: string) => (href === "/app" ? pathname === href : pathna
           </button>
 
           <div class="min-w-0 flex-1">
-            <div class="text-xs uppercase tracking-[0.2em] text-white/45">Pool operations</div>
-            <div class="truncate text-sm text-white/70">Luxury portfolio compliance workspace</div>
+            <div class="text-xs uppercase tracking-[0.2em] text-white/45">Bluu3</div>
+            <div class="truncate text-sm text-white/70">Votre piscine, toujours sous contrôle.</div>
           </div>
 
           <label class="w-full min-w-[220px] max-w-sm sm:w-auto">
@@ -107,18 +111,18 @@ const isActive = (href: string) => (href === "/app" ? pathname === href : pathna
             <select
               class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition focus:border-emerald-400/50"
             >
-              <option value="all">All properties</option>
-              {properties.map((property) => (
-                <option value={property.id}>{property.name}</option>
+              <option value="all">Toutes les piscines</option>
+              {data.pools.map((pool: any) => (
+                <option value={pool.id}>{pool.name}</option>
               ))}
             </select>
           </label>
 
           <a
-            href="/app/logs/new"
+            href="/app/measurements"
             class="inline-flex items-center justify-center rounded-2xl bg-emerald-400 px-4 py-3 text-sm font-semibold text-slate-950 hover:bg-emerald-300"
           >
-            New daily check
+            Nouvelle mesure
           </a>
         </div>
       </header>

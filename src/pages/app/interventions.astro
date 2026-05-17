@@ -1,0 +1,11 @@
+---
+import AppLayout from "../../layouts/AppLayout.astro";
+import { getAppData } from "../../lib/db";
+const data = await getAppData();
+---
+<AppLayout title="Interventions" description="CRUD interventions Bluu3">
+  <section class="space-y-6">
+    <div><p class="text-xs uppercase tracking-[0.2em] text-white/45">CRUD</p><h1 class="mt-2 text-3xl font-semibold">Interventions</h1><p class="mt-3 text-white/70">Gestion des interventions, statuts, rapports et export PDF simple.</p></div>
+    <div class="grid gap-4 md:grid-cols-2">{data.interventions.map((item: any) => { const pool = data.pools.find((pool: any) => pool.id === item.pool_id); return <article class="rounded-3xl border border-white/10 bg-white/5 p-6"><div class="flex justify-between gap-4"><div><h2 class="text-xl font-semibold">{item.type}</h2><p class="mt-2 text-sm text-white/60">{pool?.name} - {new Date(item.scheduled_at).toLocaleString("fr-FR")}</p></div><span class="h-fit rounded-full bg-white/10 px-3 py-1 text-xs">{item.status}</span></div><p class="mt-4 text-white/70">{item.notes}</p><a class="mt-5 inline-flex text-sm text-emerald-200" href={`/api/exports/intervention?pool=${item.pool_id}`}>Export PDF</a></article>; })}</div>
+  </section>
+</AppLayout>

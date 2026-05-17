@@ -1,0 +1,30 @@
+---
+import AppLayout from "../../layouts/AppLayout.astro";
+import { getAppData } from "../../lib/db";
+
+const data = await getAppData();
+const owner = data.users.find((user: any) => user.role === "owner");
+const pool = data.pools.find((pool: any) => pool.owner_id === owner?.id);
+const latest = data.measurements.find((item: any) => item.pool_id === pool?.id);
+const score = data.ecoScores.find((item: any) => item.pool_id === pool?.id);
+---
+<AppLayout title="Espace propriétaire" description="Espace owner Bluu3">
+  <section class="space-y-6">
+    <div><p class="text-xs uppercase tracking-[0.2em] text-white/45">B2C</p><h1 class="mt-2 text-3xl font-semibold">Espace propriétaire</h1><p class="mt-3 text-white/70">Vue simple de la piscine, dernière mesure, alerte principale, recommandation et Pool Passport.</p></div>
+    {pool && <div class="grid gap-6 xl:grid-cols-[1fr_0.8fr]">
+      <article class="rounded-3xl border border-white/10 bg-white/5 p-6">
+        <h2 class="text-2xl font-semibold">{pool.name}</h2><p class="mt-2 text-white/60">{pool.location} - statut {pool.status}</p>
+        <div class="mt-6 grid gap-4 md:grid-cols-3">
+          <div class="rounded-2xl border border-white/10 bg-slate-950/45 p-4"><div class="text-sm text-white/60">pH</div><div class="mt-2 text-2xl font-semibold">{latest?.ph ?? "-"}</div></div>
+          <div class="rounded-2xl border border-white/10 bg-slate-950/45 p-4"><div class="text-sm text-white/60">Chlore</div><div class="mt-2 text-2xl font-semibold">{latest?.chlorine ?? "-"}</div></div>
+          <div class="rounded-2xl border border-white/10 bg-slate-950/45 p-4"><div class="text-sm text-white/60">Température</div><div class="mt-2 text-2xl font-semibold">{latest?.temperature ?? "-"} C</div></div>
+        </div>
+        <p class="mt-6 text-white/75">{pool.status === "ok" ? "Recommandation : continuer le suivi régulier." : "Alerte : intervention ou correction chimique recommandée."}</p>
+      </article>
+      <article class="rounded-3xl border border-white/10 bg-white/5 p-6">
+        <h2 class="text-2xl font-semibold">Eco-Score MVP</h2><div class="mt-4 text-5xl font-semibold">{score?.global_score ?? "-"}</div><div class="mt-2 text-white/60">Grade {score?.grade ?? "-"}</div>
+        <a class="mt-6 inline-flex rounded-2xl bg-emerald-400 px-4 py-3 text-sm font-semibold text-slate-950" href={`/app/passport?pool=${pool.id}`}>Voir le Pool Passport</a>
+      </article>
+    </div>}
+  </section>
+</AppLayout>

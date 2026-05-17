@@ -1,0 +1,11 @@
+---
+import AppLayout from "../../layouts/AppLayout.astro";
+import { getAppData } from "../../lib/db";
+const data = await getAppData();
+---
+<AppLayout title="Admin" description="Administration MVP Bluu3">
+  <section class="space-y-6">
+    <div><p class="text-xs uppercase tracking-[0.2em] text-white/45">Administration MVP</p><h1 class="mt-2 text-3xl font-semibold">Admin</h1><p class="mt-3 text-white/70">Utilisateurs, rôles et données seed pour valider les pilotes.</p></div>
+    <div class="rounded-3xl border border-white/10 bg-white/5 p-4"><table class="min-w-full text-left text-sm"><thead class="text-white/45"><tr><th class="p-3">Nom</th><th class="p-3">Email</th><th class="p-3">Rôle</th></tr></thead><tbody>{data.users.map((user: any) => <tr class="border-t border-white/10"><td class="p-3">{user.name}</td><td class="p-3">{user.email}</td><td class="p-3">{user.role}</td></tr>)}</tbody></table></div>
+  </section>
+</AppLayout>

@@ -1,0 +1,11 @@
+---
+import AppLayout from "../../layouts/AppLayout.astro";
+import { getAppData } from "../../lib/db";
+const data = await getAppData();
+---
+<AppLayout title="Eco-Score MVP" description="Eco-Score MVP Bluu3">
+  <section class="space-y-6">
+    <div><p class="text-xs uppercase tracking-[0.2em] text-white/45">Indicateur MVP</p><h1 class="mt-2 text-3xl font-semibold">Eco-Score MVP</h1><p class="mt-3 text-white/70">Score global = eau 30%, énergie 30%, chimie 20%, déplacements 10%, CO2 10%. Ce n'est pas une certification finale.</p></div>
+    <div class="grid gap-4 md:grid-cols-2">{data.ecoScores.map((score: any) => { const pool = data.pools.find((pool: any) => pool.id === score.pool_id); return <article class="rounded-3xl border border-white/10 bg-white/5 p-6"><div class="flex items-start justify-between"><div><h2 class="text-xl font-semibold">{pool?.name}</h2><p class="mt-2 text-sm text-white/60">{pool?.location}</p></div><div class="text-right"><div class="text-4xl font-semibold">{score.global_score}</div><div class="text-white/60">Grade {score.grade}</div></div></div><div class="mt-6 grid grid-cols-2 gap-3 text-sm text-white/75"><div>Eau {score.water_score}</div><div>Énergie {score.energy_score}</div><div>Chimie {score.chemistry_score}</div><div>Déplacements {score.transport_score}</div><div>CO2 {score.co2_score}</div></div></article>; })}</div>
+  </section>
+</AppLayout>

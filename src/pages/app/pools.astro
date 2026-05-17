@@ -1,0 +1,11 @@
+---
+import AppLayout from "../../layouts/AppLayout.astro";
+import { getAppData } from "../../lib/db";
+const data = await getAppData();
+---
+<AppLayout title="Piscines" description="CRUD piscines Bluu3">
+  <section class="space-y-6">
+    <div><p class="text-xs uppercase tracking-[0.2em] text-white/45">CRUD</p><h1 class="mt-2 text-3xl font-semibold">Piscines</h1><p class="mt-3 text-white/70">Gestion MVP des piscines. L'API `POST /api/pools` crée en PostgreSQL lorsque Railway est configuré.</p></div>
+    <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">{data.pools.map((pool: any) => <article class="rounded-3xl border border-white/10 bg-white/5 p-6"><h2 class="text-xl font-semibold">{pool.name}</h2><p class="mt-2 text-sm text-white/60">{pool.location}</p><p class="mt-4 text-sm text-white/70">{pool.volume} m3 - {pool.treatment_type}</p><a class="mt-5 inline-flex text-sm text-emerald-200" href={`/app/passport?pool=${pool.id}`}>Ouvrir</a></article>)}</div>
+  </section>
+</AppLayout>
