@@ -1,30 +1,133 @@
 ---
 import AppLayout from "../../layouts/AppLayout.astro";
-import { getAppData } from "../../lib/db";
 
-const data = await getAppData();
-const owner = data.users.find((user: any) => user.role === "owner");
-const pool = data.pools.find((pool: any) => pool.owner_id === owner?.id);
-const latest = data.measurements.find((item: any) => item.pool_id === pool?.id);
-const score = data.ecoScores.find((item: any) => item.pool_id === pool?.id);
+const metrics = [
+  ["pH", "7,2", "Plage idéale 7,0 - 7,4", "bg-emerald-400/15 text-emerald-200"],
+  ["Chlore libre", "0,8 mg/L", "Sous le seuil 1,0 mg/L", "bg-amber-400/15 text-amber-200"],
+  ["Température", "26,4 °C", "Idéale baignade", "bg-emerald-400/15 text-emerald-200"],
+  ["ORP", "685 mV", "Désinfection stable", "bg-emerald-400/15 text-emerald-200"],
+];
+
+const scoreLines = [
+  ["pH", "20/20", "Parfait - aucune action"],
+  ["Chlore", "14/20", "Ajouter 150g chlore choc ce soir"],
+  ["Température", "18/20", "Idéale pour la baignade"],
+  ["Filtration", "16/20", "6h/jour - conforme"],
+];
+
+const ecoLines = [
+  ["Eau", "A", "90/100", "0 litre perdu"],
+  ["Energie", "B", "75/100", "Filtration bien programmée"],
+  ["Chimie", "B+", "78/100", "-12% vs moyenne bassin similaire"],
+  ["Déplacements", "A", "92/100", "1 visite préventive vs 2 correctives"],
+  ["CO2", "C+", "65/100", "Pompe à chaleur optimisable"],
+];
 ---
-<AppLayout title="Espace propriétaire" description="Espace owner Bluu3">
-  <section class="space-y-6">
-    <div><p class="text-xs uppercase tracking-[0.2em] text-white/45">B2C</p><h1 class="mt-2 text-3xl font-semibold">Espace propriétaire</h1><p class="mt-3 text-white/70">Vue simple de la piscine, dernière mesure, alerte principale, recommandation et Pool Passport.</p></div>
-    {pool && <div class="grid gap-6 xl:grid-cols-[1fr_0.8fr]">
-      <article class="rounded-3xl border border-white/10 bg-white/5 p-6">
-        <h2 class="text-2xl font-semibold">{pool.name}</h2><p class="mt-2 text-white/60">{pool.location} - statut {pool.status}</p>
-        <div class="mt-6 grid gap-4 md:grid-cols-3">
-          <div class="rounded-2xl border border-white/10 bg-slate-950/45 p-4"><div class="text-sm text-white/60">pH</div><div class="mt-2 text-2xl font-semibold">{latest?.ph ?? "-"}</div></div>
-          <div class="rounded-2xl border border-white/10 bg-slate-950/45 p-4"><div class="text-sm text-white/60">Chlore</div><div class="mt-2 text-2xl font-semibold">{latest?.chlorine ?? "-"}</div></div>
-          <div class="rounded-2xl border border-white/10 bg-slate-950/45 p-4"><div class="text-sm text-white/60">Température</div><div class="mt-2 text-2xl font-semibold">{latest?.temperature ?? "-"} C</div></div>
+<AppLayout title="Sophie Bartoli" description="Démo propriétaire Bluu3">
+  <section class="space-y-8">
+    <div class="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
+      <article class="rounded-3xl border border-white/10 bg-white/5 p-7">
+        <p class="text-xs uppercase tracking-[0.2em] text-emerald-300/80">P1 · Dashboard propriétaire</p>
+        <h1 class="mt-3 text-4xl font-semibold tracking-tight">Bonjour Sophie Bartoli</h1>
+        <p class="mt-3 text-white/70">Villa Les Pins · Porticcio · Piscine 60 m3 · Capteur iopool connecté · Dernière sync il y a 2h</p>
+        <div class="mt-6 grid gap-4 md:grid-cols-4">
+          {metrics.map(([label, value, note, tone]) => (
+            <article class="rounded-2xl border border-white/10 bg-slate-950/45 p-4">
+              <div class={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${tone}`}>{label === "Chlore libre" ? "A surveiller" : "OK"}</div>
+              <div class="mt-4 text-3xl font-semibold">{value}</div>
+              <div class="mt-1 text-sm text-white/55">{label}</div>
+              <div class="mt-3 text-xs text-white/45">{note}</div>
+            </article>
+          ))}
         </div>
-        <p class="mt-6 text-white/75">{pool.status === "ok" ? "Recommandation : continuer le suivi régulier." : "Alerte : intervention ou correction chimique recommandée."}</p>
+        <div class="mt-6 rounded-2xl border border-amber-300/30 bg-amber-400/10 p-5">
+          <div class="text-sm font-semibold text-amber-100">Alerte active</div>
+          <p class="mt-2 text-white/80">Ajoutez du chlore - taux bas depuis 18h. Canicule prévue demain : risque algues si aucune action ce soir.</p>
+        </div>
       </article>
+
+      <aside class="space-y-4">
+        <a href="#score" class="block rounded-3xl border border-white/10 bg-white/5 p-6 hover:bg-white/10">
+          <div class="text-sm text-white/60">Score santé</div>
+          <div class="mt-2 text-6xl font-semibold text-amber-200">74/100</div>
+          <div class="mt-2 text-white/60">Pastille orange · action recommandée</div>
+        </a>
+        <a href="#eco" class="block rounded-3xl border border-white/10 bg-white/5 p-6 hover:bg-white/10">
+          <div class="text-sm text-white/60">Eco-Score</div>
+          <div class="mt-2 text-6xl font-semibold text-emerald-300">B+</div>
+          <div class="mt-2 text-white/60">78/100 · Pool Passport certifiable</div>
+        </a>
+      </aside>
+    </div>
+
+    <div class="grid gap-6 xl:grid-cols-2">
+      <article id="score" class="rounded-3xl border border-white/10 bg-white/5 p-6">
+        <p class="text-xs uppercase tracking-[0.2em] text-white/45">P2 · Détail score santé</p>
+        <h2 class="mt-2 text-2xl font-semibold">Décomposition du score 74/100</h2>
+        <div class="mt-5 space-y-3">
+          {scoreLines.map(([label, value, note]) => (
+            <div class="flex items-center justify-between gap-4 rounded-2xl border border-white/10 bg-slate-950/45 p-4">
+              <div><div class="font-semibold">{label}</div><div class="text-sm text-white/55">{note}</div></div>
+              <div class="text-lg font-semibold text-emerald-200">{value}</div>
+            </div>
+          ))}
+        </div>
+        <div class="mt-5 rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-4 text-white/80">Bluu3 AI recommande : ajoutez 150g de chlore choc ce soir après 20h. Attendez 4h avant baignade. Score prévu demain : 88/100.</div>
+      </article>
+
+      <article id="eco" class="rounded-3xl border border-white/10 bg-white/5 p-6">
+        <p class="text-xs uppercase tracking-[0.2em] text-white/45">P3 · Eco-Score</p>
+        <h2 class="mt-2 text-2xl font-semibold">Bulletin environnemental B+</h2>
+        <div class="mt-5 space-y-3">
+          {ecoLines.map(([label, grade, score, note]) => (
+            <div class="grid grid-cols-[1fr_auto_auto] items-center gap-3 rounded-2xl border border-white/10 bg-slate-950/45 p-4">
+              <div><div class="font-semibold">{label}</div><div class="text-sm text-white/55">{note}</div></div>
+              <div class="text-lg font-semibold text-emerald-200">{grade}</div>
+              <div class="text-sm text-white/55">{score}</div>
+            </div>
+          ))}
+        </div>
+        <div class="mt-5 grid gap-3 text-sm text-white/75 sm:grid-cols-3">
+          <div class="rounded-2xl bg-slate-950/45 p-4">1 200 L d'eau économisés</div>
+          <div class="rounded-2xl bg-slate-950/45 p-4">18% produits en moins</div>
+          <div class="rounded-2xl bg-slate-950/45 p-4">1 déplacement évité</div>
+        </div>
+      </article>
+    </div>
+
+    <div class="grid gap-6 xl:grid-cols-3">
       <article class="rounded-3xl border border-white/10 bg-white/5 p-6">
-        <h2 class="text-2xl font-semibold">Eco-Score MVP</h2><div class="mt-4 text-5xl font-semibold">{score?.global_score ?? "-"}</div><div class="mt-2 text-white/60">Grade {score?.grade ?? "-"}</div>
-        <a class="mt-6 inline-flex rounded-2xl bg-emerald-400 px-4 py-3 text-sm font-semibold text-slate-950" href={`/app/passport?pool=${pool.id}`}>Voir le Pool Passport</a>
+        <p class="text-xs uppercase tracking-[0.2em] text-white/45">P5 · Mode vacances</p>
+        <h2 class="mt-2 text-2xl font-semibold">Plan guidé par IA</h2>
+        <ol class="mt-5 space-y-3 text-sm text-white/75">
+          <li class="rounded-2xl bg-slate-950/45 p-4">Ce soir : 150g chlore choc + vérification pH</li>
+          <li class="rounded-2xl bg-slate-950/45 p-4">Mardi : 200g stabilisant + filtration 8h/jour</li>
+          <li class="rounded-2xl bg-slate-950/45 p-4">Bluu3 prévient J.-M. Marinelli pour le 28 mai</li>
+          <li class="rounded-2xl bg-slate-950/45 p-4">Veille départ : score santé cible 90/100</li>
+        </ol>
       </article>
-    </div>}
+
+      <article class="rounded-3xl border border-white/10 bg-white/5 p-6">
+        <p class="text-xs uppercase tracking-[0.2em] text-white/45">P6 · Historique</p>
+        <h2 class="mt-2 text-2xl font-semibold">30 derniers jours</h2>
+        <svg class="mt-5 h-56 w-full rounded-2xl bg-slate-950/45 p-4" viewBox="0 0 520 220">
+          <polyline points="10,60 70,78 130,115 190,128 250,96 310,78 370,60 450,96 510,96" fill="none" stroke="#60a5fa" stroke-width="5" stroke-linecap="round" />
+          <polyline points="10,45 70,68 130,115 160,145 190,68 270,40 340,82 420,118 510,150" fill="none" stroke="#2dd4bf" stroke-width="5" stroke-linecap="round" />
+          <polyline points="10,170 120,158 230,138 340,108 510,70" fill="none" stroke="#fb923c" stroke-width="5" stroke-linecap="round" />
+        </svg>
+        <div class="mt-4 text-sm text-white/60">pH · Chlore · Température, avec alertes 28 avril et 19 mai.</div>
+      </article>
+
+      <article class="rounded-3xl border border-white/10 bg-white/5 p-6">
+        <p class="text-xs uppercase tracking-[0.2em] text-white/45">P7 · Assistant IA</p>
+        <h2 class="mt-2 text-2xl font-semibold">Chat contextuel</h2>
+        <div class="mt-5 space-y-3 text-sm">
+          <p class="ml-auto max-w-[82%] rounded-2xl bg-emerald-400 px-4 py-3 font-medium text-slate-950">Puis-je me baigner ce soir avec ma fille ?</p>
+          <p class="max-w-[88%] rounded-2xl bg-slate-950/45 px-4 py-3 text-white/75">Je déconseille la baignade ce soir : chlore à 0,8 mg/L. Après chlore choc, baignade possible demain matin après 8h.</p>
+          <p class="ml-auto max-w-[82%] rounded-2xl bg-emerald-400 px-4 py-3 font-medium text-slate-950">Combien de chlore ?</p>
+          <p class="max-w-[88%] rounded-2xl bg-slate-950/45 px-4 py-3 text-white/75">150g de chlore granulé 56% ce soir après 20h. Filtration 2h. Score prévu demain : 88/100.</p>
+        </div>
+      </article>
+    </div>
   </section>
 </AppLayout>
