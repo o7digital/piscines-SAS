@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap");
 @import "tailwindcss";
 
 :root {
@@ -13,4 +13,366 @@ body {
 .font-display {
   font-family: "Cormorant Garamond", "Times New Roman", serif;
   letter-spacing: -0.01em;
+}
+
+.demo-app {
+  --navy: #0a2463;
+  --teal: #007a6e;
+  --text: #1a1a2e;
+  --muted: #5a6473;
+  --bg: #f8fafc;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.demo-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px clamp(16px, 4vw, 48px);
+  border-bottom: 1px solid #e5eaf1;
+  background: rgba(248, 250, 252, 0.92);
+  backdrop-filter: blur(16px);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border: 0;
+  background: transparent;
+  color: var(--navy);
+  font: inherit;
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.brand.large {
+  font-size: 34px;
+}
+
+.brand-mark {
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
+  background: var(--teal);
+}
+
+.header-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.icon-btn,
+.back,
+.secondary {
+  border: 1px solid #d8e0ea;
+  border-radius: 8px;
+  background: #fff;
+  color: var(--navy);
+  font-weight: 700;
+  padding: 10px 12px;
+}
+
+.start-screen,
+.screen {
+  width: min(1120px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 28px 0 56px;
+}
+
+.start-screen {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(320px, 1.1fr);
+  gap: 24px;
+  align-items: stretch;
+}
+
+.login-panel,
+.profile-card,
+.metric,
+.score-card,
+.detail-card,
+.pool-row,
+.messages article,
+.stock-grid,
+.chart,
+.chat,
+.timeline {
+  border: 1px solid #e3e9f2;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 14px 40px rgba(10, 36, 99, 0.08);
+}
+
+.login-panel,
+.profile-card {
+  padding: clamp(22px, 4vw, 36px);
+}
+
+.login-panel h1,
+.screen-title h1 {
+  margin: 18px 0 8px;
+  color: var(--navy);
+  font-size: clamp(32px, 6vw, 54px);
+  line-height: 1;
+  font-weight: 800;
+}
+
+.login-panel p,
+.screen-title p,
+.profile-card small,
+.metric small,
+.pool-row span,
+.pool-row small {
+  color: var(--muted);
+}
+
+.login-box {
+  display: grid;
+  gap: 10px;
+  margin-top: 28px;
+}
+
+.login-box input,
+.chat-input {
+  width: 100%;
+  border: 1px solid #d8e0ea;
+  border-radius: 8px;
+  background: #fff;
+  padding: 13px 14px;
+}
+
+.login-box button,
+.primary,
+.bottom-nav button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 8px;
+  background: var(--navy);
+  color: #fff;
+  font-weight: 800;
+  padding: 13px 16px;
+  text-decoration: none;
+}
+
+.profile-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.profile-card {
+  display: grid;
+  gap: 10px;
+  text-align: left;
+  color: var(--text);
+}
+
+.profile-card strong {
+  color: var(--navy);
+  font-size: clamp(28px, 4vw, 42px);
+  line-height: 1;
+}
+
+.profile-card.teal strong {
+  color: var(--teal);
+}
+
+.screen-title {
+  margin-bottom: 20px;
+}
+
+.back {
+  margin-bottom: 14px;
+}
+
+.hero-status,
+.metric-grid,
+.bottom-nav,
+.summary,
+.stock-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.hero-status {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.score-card,
+.metric {
+  display: grid;
+  gap: 10px;
+  padding: 20px;
+  text-align: left;
+}
+
+.score-card strong {
+  color: var(--navy);
+  font-size: clamp(42px, 8vw, 70px);
+  line-height: 0.95;
+}
+
+.score-card.eco strong {
+  color: #5aaf6b;
+}
+
+.metric-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 14px;
+}
+
+.metric strong {
+  font-size: 26px;
+}
+
+.pill {
+  width: fit-content;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.pill.ok {
+  background: #e8f7ee;
+  color: #008c50;
+}
+
+.pill.warn,
+.pill.watch {
+  background: #fff4d8;
+  color: #9a6100;
+}
+
+.pill.critical {
+  background: #ffe8e8;
+  color: #cc0000;
+}
+
+.alert-banner {
+  width: 100%;
+  margin: 16px 0;
+  border: 1px solid #f1c877;
+  border-radius: 8px;
+  background: #fff7e8;
+  color: #9a5400;
+  padding: 16px;
+  font-weight: 800;
+  text-align: left;
+}
+
+.bottom-nav {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.detail-card,
+.timeline,
+.chat,
+.stock-grid,
+.chart {
+  padding: 20px;
+  margin-bottom: 14px;
+}
+
+.orange .screen-title,
+.orange .detail-card {
+  background: #fff7e8;
+}
+
+.chart svg {
+  width: 100%;
+  min-height: 220px;
+}
+
+.line {
+  fill: none;
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+.line.ph { stroke: #0a2463; }
+.line.cl { stroke: #007a6e; }
+.line.temp { stroke: #cc5500; }
+
+.chat {
+  display: grid;
+  gap: 12px;
+}
+
+.chat p {
+  max-width: 76%;
+  margin: 0;
+  border-radius: 8px;
+  background: #eef3f8;
+  padding: 12px 14px;
+}
+
+.chat .me {
+  justify-self: end;
+  background: var(--navy);
+  color: #fff;
+}
+
+.pool-list,
+.messages {
+  display: grid;
+  gap: 12px;
+}
+
+.pool-row {
+  display: grid;
+  gap: 6px;
+  padding: 16px;
+  text-align: left;
+  border-left-width: 6px;
+}
+
+.pool-row.critical { border-left-color: #cc0000; }
+.pool-row.watch { border-left-color: #e6a817; }
+.pool-row.ok { border-left-color: #008c50; }
+
+.messages {
+  margin-top: 14px;
+}
+
+.messages article {
+  padding: 16px;
+}
+
+.stock-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (max-width: 760px) {
+  .start-screen,
+  .hero-status,
+  .metric-grid,
+  .bottom-nav,
+  .stock-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .demo-header {
+    align-items: flex-start;
+  }
+
+  .header-actions {
+    max-width: 180px;
+  }
+
+  .chat p {
+    max-width: 92%;
+  }
 }
