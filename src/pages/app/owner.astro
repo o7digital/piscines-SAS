@@ -2,10 +2,10 @@
 import AppLayout from "../../layouts/AppLayout.astro";
 
 const metrics = [
-  ["pH", "7,2", "Plage idéale 7,0 - 7,4", "bg-emerald-400/15 text-emerald-200"],
-  ["Chlore libre", "0,8 mg/L", "Sous le seuil 1,0 mg/L", "bg-amber-400/15 text-amber-200"],
-  ["Température", "26,4 °C", "Idéale baignade", "bg-emerald-400/15 text-emerald-200"],
-  ["ORP", "685 mV", "Désinfection stable", "bg-emerald-400/15 text-emerald-200"],
+  ["pH", "7,2", "Plage idéale 7,0 - 7,4", "Vert · OK", "border-emerald-300/40 bg-emerald-400/15 text-emerald-100"],
+  ["Chlore libre", "0,8 mg/L", "Sous le seuil 1,0 mg/L", "Orange · Bas", "border-amber-300/40 bg-amber-400/20 text-amber-100"],
+  ["Température", "26,4 °C", "Idéale baignade", "Vert · OK", "border-emerald-300/40 bg-emerald-400/15 text-emerald-100"],
+  ["ORP", "685 mV", "Désinfection stable", "Vert · OK", "border-emerald-300/40 bg-emerald-400/15 text-emerald-100"],
 ];
 
 const scoreLines = [
@@ -30,13 +30,18 @@ const ecoLines = [
         <p class="text-xs uppercase tracking-[0.2em] text-emerald-300/80">P1 · Dashboard propriétaire</p>
         <h1 class="mt-3 text-4xl font-semibold tracking-tight">Bonjour Sophie Bartoli</h1>
         <p class="mt-3 text-white/70">Villa Les Pins · Porticcio · Piscine 60 m3 · Capteur iopool connecté · Dernière sync il y a 2h</p>
+        <div class="mt-5 flex flex-wrap gap-3 text-xs font-semibold">
+          <span class="rounded-full border border-emerald-300/40 bg-emerald-400/15 px-3 py-2 text-emerald-100">Vert · dans la plage idéale</span>
+          <span class="rounded-full border border-amber-300/40 bg-amber-400/20 px-3 py-2 text-amber-100">Orange · action recommandée</span>
+          <span class="rounded-full border border-red-400/40 bg-red-500/20 px-3 py-2 text-red-100">Rouge · critique</span>
+        </div>
         <div class="mt-6 grid gap-4 md:grid-cols-4">
-          {metrics.map(([label, value, note, tone]) => (
-            <article class="rounded-2xl border border-white/10 bg-slate-950/45 p-4">
-              <div class={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${tone}`}>{label === "Chlore libre" ? "A surveiller" : "OK"}</div>
+          {metrics.map(([label, value, note, status, tone]) => (
+            <article class={`rounded-2xl border p-4 ${tone}`}>
+              <div class="inline-flex rounded-full bg-slate-950/35 px-3 py-1 text-xs font-semibold">{status}</div>
               <div class="mt-4 text-3xl font-semibold">{value}</div>
-              <div class="mt-1 text-sm text-white/55">{label}</div>
-              <div class="mt-3 text-xs text-white/45">{note}</div>
+              <div class="mt-1 text-sm text-white/75">{label}</div>
+              <div class="mt-3 text-xs text-white/60">{note}</div>
             </article>
           ))}
         </div>

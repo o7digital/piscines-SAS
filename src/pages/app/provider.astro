@@ -3,20 +3,43 @@ import AppLayout from "../../layouts/AppLayout.astro";
 import WinterMessages from "../../components/app/WinterMessages.jsx";
 
 const pools = [
-  ["B002", "M. Ferrari", "Ajaccio Centre", "45 m3", "6,8", "0,4 mg/L", "27,1°C", "52", "D", "pH + Chlore critiques", "border-red-500/70"],
-  ["B001", "Famille Bartoli", "Porticcio", "60 m3", "7,2", "0,8 mg/L", "26,4°C", "74", "B+", "Alerte chlore", "border-red-500/70"],
-  ["B005", "Mme Leonetti", "Sarrola-Carcopino", "50 m3", "7,5", "1,9 mg/L", "26,0°C", "83", "B", "Surveillance pH", "border-amber-400/70"],
-  ["B003", "Villa Rossignol", "Bastelicaccia", "80 m3", "7,3", "2,1 mg/L", "25,8°C", "91", "A", "Tout va bien", "border-emerald-400/70"],
-  ["B004", "Résidence Moretti", "Prunelli", "35 m3", "7,1", "1,4 mg/L", "24,9°C", "88", "B+", "Tout va bien", "border-emerald-400/70"],
-  ["B006", "M. Acquaviva", "Ajaccio Sud", "70 m3", "7,2", "1,6 mg/L", "25,5°C", "86", "B+", "Tout va bien", "border-emerald-400/70"],
+  ["B002", "M. Ferrari", "Ajaccio Centre", "45 m3", "6,8", "0,4 mg/L", "27,1°C", "52", "D", "pH + Chlore critiques", "critical"],
+  ["B001", "Famille Bartoli", "Porticcio", "60 m3", "7,2", "0,8 mg/L", "26,4°C", "74", "B+", "Alerte chlore", "alert"],
+  ["B005", "Mme Leonetti", "Sarrola-Carcopino", "50 m3", "7,5", "1,9 mg/L", "26,0°C", "83", "B", "Surveillance pH", "watch"],
+  ["B003", "Villa Rossignol", "Bastelicaccia", "80 m3", "7,3", "2,1 mg/L", "25,8°C", "91", "A", "Tout va bien", "ok"],
+  ["B004", "Résidence Moretti", "Prunelli", "35 m3", "7,1", "1,4 mg/L", "24,9°C", "88", "B+", "Tout va bien", "ok"],
+  ["B006", "M. Acquaviva", "Ajaccio Sud", "70 m3", "7,2", "1,6 mg/L", "25,5°C", "86", "B+", "Tout va bien", "ok"],
 ];
 
 const tour = [
-  ["08h30", "B002 · M. Ferrari · Ajaccio Centre", "Urgent · 35 min · 8 min trajet"],
-  ["09h30", "B001 · Famille Bartoli · Porticcio", "Chlore · 25 min · 22 min trajet"],
-  ["11h00", "B005 · Mme Leonetti · Sarrola-Carcopino", "Surveillance · 20 min · 15 min trajet"],
-  ["Après-midi", "B003, B004, B006", "Aucune visite requise cette semaine"],
+  ["08h30", "B002 · M. Ferrari · Ajaccio Centre", "Urgent · 35 min · 8 min trajet", "critical"],
+  ["09h30", "B001 · Famille Bartoli · Porticcio", "Chlore · 25 min · 22 min trajet", "alert"],
+  ["11h00", "B005 · Mme Leonetti · Sarrola-Carcopino", "Surveillance · 20 min · 15 min trajet", "watch"],
+  ["Après-midi", "B003, B004, B006", "Aucune visite requise cette semaine", "ok"],
 ];
+
+const statusStyles = {
+  critical: {
+    row: "border-red-500/80 bg-red-500/10",
+    pill: "border-red-400/40 bg-red-500/20 text-red-100",
+    label: "Rouge · Critique",
+  },
+  alert: {
+    row: "border-red-500/70 bg-red-500/5",
+    pill: "border-red-400/40 bg-red-500/20 text-red-100",
+    label: "Rouge · Alerte",
+  },
+  watch: {
+    row: "border-amber-400/80 bg-amber-400/10",
+    pill: "border-amber-300/40 bg-amber-400/20 text-amber-100",
+    label: "Orange · Surveillance",
+  },
+  ok: {
+    row: "border-emerald-400/80 bg-emerald-400/10",
+    pill: "border-emerald-300/40 bg-emerald-400/20 text-emerald-100",
+    label: "Vert · Sain",
+  },
+};
 ---
 <AppLayout title="Jean-Marc Marinelli" description="Cockpit pisciniste Bluu3">
   <section class="space-y-8">
@@ -29,6 +52,11 @@ const tour = [
           <div class="rounded-2xl border border-red-400/30 bg-red-400/10 p-4"><div class="text-3xl font-semibold text-red-200">2</div><div class="text-sm text-white/60">alertes critiques</div></div>
           <div class="rounded-2xl border border-amber-300/30 bg-amber-400/10 p-4"><div class="text-3xl font-semibold text-amber-100">1</div><div class="text-sm text-white/60">surveillance</div></div>
           <div class="rounded-2xl border border-emerald-400/30 bg-emerald-400/10 p-4"><div class="text-3xl font-semibold text-emerald-200">3</div><div class="text-sm text-white/60">bassins sains</div></div>
+        </div>
+        <div class="mt-5 flex flex-wrap gap-3 text-xs font-semibold">
+          <span class="rounded-full border border-red-400/40 bg-red-500/20 px-3 py-2 text-red-100">Rouge · intervention prioritaire</span>
+          <span class="rounded-full border border-amber-300/40 bg-amber-400/20 px-3 py-2 text-amber-100">Orange · surveillance</span>
+          <span class="rounded-full border border-emerald-300/40 bg-emerald-400/20 px-3 py-2 text-emerald-100">Vert · bassin sain</span>
         </div>
       </article>
 
@@ -50,17 +78,20 @@ const tour = [
             <tr><th class="py-3 pr-4">ID</th><th class="py-3 pr-4">Client</th><th class="py-3 pr-4">Adresse</th><th class="py-3 pr-4">pH</th><th class="py-3 pr-4">Chlore</th><th class="py-3 pr-4">Temp.</th><th class="py-3 pr-4">Score</th><th class="py-3 pr-4">Eco</th><th class="py-3 pr-4">Statut</th></tr>
           </thead>
           <tbody>
-            {pools.map(([id, client, city, volume, ph, chlorine, temp, score, eco, status, border]) => (
-              <tr class={`border-l-4 ${border} border-t border-white/10`}>
+            {pools.map(([id, client, city, volume, ph, chlorine, temp, score, eco, status, level]) => (
+              <tr class={`border-l-4 ${statusStyles[level].row} border-t border-white/10`}>
                 <td class="py-4 pr-4 font-semibold text-white">{id}</td>
                 <td class="py-4 pr-4">{client}<div class="text-xs text-white/45">{volume}</div></td>
                 <td class="py-4 pr-4 text-white/65">{city}</td>
-                <td class="py-4 pr-4">{ph}</td>
-                <td class="py-4 pr-4">{chlorine}</td>
+                <td class={`py-4 pr-4 font-semibold ${id === "B002" ? "text-amber-100" : id === "B005" ? "text-amber-100" : "text-emerald-100"}`}>{ph}</td>
+                <td class={`py-4 pr-4 font-semibold ${id === "B002" || id === "B001" ? "text-red-100" : "text-emerald-100"}`}>{chlorine}</td>
                 <td class="py-4 pr-4">{temp}</td>
                 <td class="py-4 pr-4 font-semibold">{score}</td>
                 <td class="py-4 pr-4">{eco}</td>
-                <td class="py-4 pr-4 text-white/75">{status}</td>
+                <td class="py-4 pr-4">
+                  <span class={`inline-flex rounded-full border px-3 py-1 text-xs font-semibold ${statusStyles[level].pill}`}>{statusStyles[level].label}</span>
+                  <div class="mt-1 text-xs text-white/55">{status}</div>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -87,10 +118,14 @@ const tour = [
         <p class="text-xs uppercase tracking-[0.2em] text-white/45">C3 · Tournée optimisée</p>
         <h2 class="mt-2 text-2xl font-semibold">Lundi 19 mai 2026</h2>
         <div class="mt-5 space-y-3">
-          {tour.map(([time, title, note]) => (
-            <div class="grid grid-cols-[72px_1fr] gap-3 rounded-2xl border border-white/10 bg-slate-950/45 p-4">
+          {tour.map(([time, title, note, level]) => (
+            <div class={`grid grid-cols-[72px_1fr] gap-3 rounded-2xl border p-4 ${statusStyles[level].row}`}>
               <div class="font-semibold text-emerald-200">{time}</div>
-              <div><div class="font-semibold">{title}</div><div class="text-sm text-white/55">{note}</div></div>
+              <div>
+                <span class={`inline-flex rounded-full border px-3 py-1 text-xs font-semibold ${statusStyles[level].pill}`}>{statusStyles[level].label}</span>
+                <div class="mt-2 font-semibold">{title}</div>
+                <div class="text-sm text-white/55">{note}</div>
+              </div>
             </div>
           ))}
         </div>
