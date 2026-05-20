@@ -18,6 +18,13 @@ const tour = [
   ["Après-midi", "B003, B004, B006", "Aucune visite requise cette semaine", "ok"],
 ];
 
+const correctionSteps = [
+  ["Maintenant", "pH 6,8", "Chlore 0,4", "Hors cible", "critical"],
+  ["+ 10 min", "pH+ 300g", "Dissolution", "pH remonte", "watch"],
+  ["+ 20 min", "Chlore choc 200g", "56% granulé", "Chlore remonte", "alert"],
+  ["+ 35 min", "Algicide 100ml", "Stabilisation", "Zone saine", "ok"],
+];
+
 const statusStyles = {
   critical: {
     row: "border-red-500/80 bg-red-500/10",
@@ -111,6 +118,88 @@ const statusStyles = {
         </div>
         <div class="mt-5 rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-4 text-white/80">
           Diagnostic Bluu3 AI : apporter 300g pH+, 200g chlore choc granulé 56%, 100ml algicide préventif. Durée estimée : 35 minutes. Priorité haute avant mercredi 21 mai.
+        </div>
+        <div class="mt-5 rounded-2xl border border-white/10 bg-slate-950/35 p-4">
+          <div class="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <div class="text-sm font-semibold text-white">Courbe de rétablissement</div>
+              <div class="mt-1 text-xs text-white/50">M. Ferrari · correction directe des dosages sur la trajectoire</div>
+            </div>
+            <span class="rounded-full border border-emerald-300/40 bg-emerald-400/15 px-3 py-1 text-xs font-semibold text-emerald-100">Objectif 35 min</span>
+          </div>
+          <div class="mt-4 overflow-x-auto">
+            <div class="relative min-w-[620px] rounded-2xl bg-slate-950/45 p-4">
+              <svg class="h-56 w-full" viewBox="0 0 680 230" role="img" aria-label="Courbe de correction pH et chlore pour M. Ferrari">
+                <defs>
+                  <linearGradient id="providerRecoveryFill" x1="0" x2="1" y1="0" y2="0">
+                    <stop offset="0%" stop-color="#ef4444" stop-opacity="0.18" />
+                    <stop offset="55%" stop-color="#f59e0b" stop-opacity="0.14" />
+                    <stop offset="100%" stop-color="#34d399" stop-opacity="0.18" />
+                  </linearGradient>
+                  <filter id="providerGlow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur stdDeviation="4" result="blur" />
+                    <feMerge>
+                      <feMergeNode in="blur" />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
+                </defs>
+                <rect x="72" y="34" width="512" height="116" rx="18" fill="#34d399" opacity="0.08" />
+                <text x="590" y="76" fill="#a7f3d0" font-size="12" font-weight="700">Zone saine</text>
+                <text x="590" y="96" fill="#94a3b8" font-size="11">pH 7,2 · chlore 1,6</text>
+                <path d="M72 188 H620" stroke="#ffffff" stroke-opacity="0.14" />
+                <path d="M72 150 H620" stroke="#ffffff" stroke-opacity="0.08" />
+                <path d="M72 112 H620" stroke="#ffffff" stroke-opacity="0.08" />
+                <path d="M72 74 H620" stroke="#ffffff" stroke-opacity="0.08" />
+                <path d="M72 36 V188" stroke="#ffffff" stroke-opacity="0.14" />
+                <path d="M78 170 C180 158 235 137 304 116 C384 92 470 78 586 64" fill="none" stroke="url(#providerRecoveryFill)" stroke-width="18" stroke-linecap="round" />
+                <path d="M78 170 C180 158 235 137 304 116 C384 92 470 78 586 64" fill="none" stroke="#34d399" stroke-width="4" stroke-linecap="round" filter="url(#providerGlow)" />
+                <path d="M78 178 C190 176 256 166 320 143 C404 112 482 92 586 82" fill="none" stroke="#fbbf24" stroke-width="3" stroke-dasharray="8 8" stroke-linecap="round" />
+                <g fill="#020617" stroke-width="3">
+                  <circle cx="78" cy="170" r="8" stroke="#f87171" />
+                  <circle cx="246" cy="134" r="8" stroke="#fbbf24" />
+                  <circle cx="410" cy="88" r="8" stroke="#f87171" />
+                  <circle cx="586" cy="64" r="8" stroke="#34d399" />
+                </g>
+                <g fill="#94a3b8" font-size="11">
+                  <text x="62" y="207">0</text>
+                  <text x="230" y="207">10 min</text>
+                  <text x="392" y="207">20 min</text>
+                  <text x="566" y="207">35 min</text>
+                </g>
+                <g fill="#cbd5e1" font-size="11">
+                  <text x="20" y="174">bas</text>
+                  <text x="18" y="78">cible</text>
+                </g>
+              </svg>
+              <div class="pointer-events-none absolute left-[84px] top-[142px] w-32 rounded-xl border border-red-400/40 bg-red-500/20 p-2 text-xs shadow-xl shadow-slate-950/30">
+                <div class="font-semibold text-red-100">Départ critique</div>
+                <div class="text-white/65">pH 6,8 · Cl 0,4</div>
+              </div>
+              <div class="pointer-events-none absolute left-[224px] top-[90px] w-36 rounded-xl border border-amber-300/40 bg-amber-400/20 p-2 text-xs shadow-xl shadow-slate-950/30">
+                <div class="font-semibold text-amber-100">Ajouter pH+</div>
+                <div class="text-white/65">300g directement</div>
+              </div>
+              <div class="pointer-events-none absolute left-[386px] top-[42px] w-40 rounded-xl border border-red-300/40 bg-red-500/20 p-2 text-xs shadow-xl shadow-slate-950/30">
+                <div class="font-semibold text-red-100">Chlore choc</div>
+                <div class="text-white/65">200g granulé 56%</div>
+              </div>
+              <div class="pointer-events-none absolute right-6 top-6 w-36 rounded-xl border border-emerald-300/40 bg-emerald-400/20 p-2 text-xs shadow-xl shadow-slate-950/30">
+                <div class="font-semibold text-emerald-100">Rétabli</div>
+                <div class="text-white/65">algicide 100ml</div>
+              </div>
+            </div>
+          </div>
+          <div class="mt-4 grid gap-2 sm:grid-cols-4">
+            {correctionSteps.map(([time, title, note, result, level]) => (
+              <div class={`rounded-2xl border p-3 text-xs ${statusStyles[level].row}`}>
+                <div class="font-semibold text-white">{time}</div>
+                <div class="mt-1 text-white/80">{title}</div>
+                <div class="text-white/50">{note}</div>
+                <div class="mt-2 font-semibold text-emerald-100">{result}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </article>
 
