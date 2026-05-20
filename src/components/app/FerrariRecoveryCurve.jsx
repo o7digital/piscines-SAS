@@ -374,8 +374,8 @@ export default function FerrariRecoveryCurve() {
         </div>
       </div>
 
-      <div className="mt-4 overflow-x-auto">
-        <div className="relative min-w-[520px] rounded-2xl bg-slate-950/45 p-3 sm:min-w-[620px] sm:p-4">
+      <div className="mt-4 max-w-full overflow-x-auto overscroll-x-contain">
+        <div className="relative w-full max-w-full rounded-2xl bg-slate-950/45 p-3 sm:min-w-[620px] sm:p-4">
           <svg
             ref={mainSvgRef}
             className="h-56 w-full touch-none select-none"
@@ -533,7 +533,7 @@ export default function FerrariRecoveryCurve() {
                   <span className="rounded-full border border-amber-300/40 bg-amber-400/15 px-3 py-1 text-amber-100">Point jaune : chlore</span>
                 </div>
               </div>
-              <div className="mt-3 overflow-x-auto">
+              <div className="mt-3 max-w-full overflow-x-auto overscroll-x-contain">
                 <svg
                   ref={modalSvgRef}
                   className="h-64 min-w-[560px] w-full touch-none select-none rounded-2xl bg-slate-950/70 sm:h-72 sm:min-w-[680px]"

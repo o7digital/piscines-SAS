@@ -24,9 +24,9 @@ const isActive = (href: string) => (href === "/app" ? pathname === href : pathna
   title={`${title} | Bluu3`}
   description={description}
   themeColor="#020617"
-  bodyClass="bg-slate-950 text-white antialiased"
+  bodyClass="overflow-x-hidden bg-slate-950 text-white antialiased"
 >
-  <div class="min-h-screen lg:flex">
+  <div class="min-h-screen overflow-x-hidden lg:flex">
     <div id="app-backdrop" class="fixed inset-0 z-40 hidden bg-slate-950/85 lg:hidden"></div>
 
     <aside
@@ -87,7 +87,7 @@ const isActive = (href: string) => (href === "/app" ? pathname === href : pathna
       </div>
     </aside>
 
-    <div class="flex min-h-screen flex-1 flex-col lg:pl-0">
+    <div class="flex min-h-screen min-w-0 flex-1 flex-col overflow-x-hidden lg:pl-0">
       <header class="sticky top-0 z-30 border-b border-white/10 bg-slate-950/85 backdrop-blur">
         <div class="flex flex-wrap items-center gap-3 px-4 py-4 sm:px-6 lg:px-8">
           <button
@@ -127,7 +127,7 @@ const isActive = (href: string) => (href === "/app" ? pathname === href : pathna
         </div>
       </header>
 
-      <main class="flex-1 px-4 py-6 sm:px-6 lg:px-8">
+      <main class="min-w-0 flex-1 overflow-x-hidden px-4 py-6 sm:px-6 lg:px-8">
         <slot />
       </main>
     </div>
