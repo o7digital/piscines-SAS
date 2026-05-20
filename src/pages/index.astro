@@ -2,11 +2,139 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 
 const HERO_IMAGE = "/Gemini_Generated_Image_aw8b9saw8b9saw8b.png";
+const localeFromPath = Astro.url.pathname.startsWith("/en") ? "en" : Astro.url.pathname.startsWith("/es") ? "es" : "fr";
+const copyByLang = {
+  fr: {
+    title: "Bluu3 - Votre piscine, toujours sous contrôle",
+    description: "SaaS piscine pour mesures, interventions, Eco-Score MVP, Pool Passport et suivi propriétaire.",
+    badge: "MVP SaaS piscine",
+    navProduct: "Produit",
+    dashboard: "Dashboard",
+    testApp: "Tester l'app",
+    headline: "Bluu3 — votre piscine, toujours sous contrôle.",
+    intro: "Mesures d'eau, interventions, alertes, Eco-Score MVP et Pool Passport pour piscinistes, propriétaires et premiers pilotes.",
+    demo: "Demander une démo",
+    product: "Voir le produit",
+    measurements: "Mesures",
+    measurementsText: "pH, chlore, température, ORP.",
+    interventions: "Interventions",
+    interventionsText: "Planning, statuts, rapports.",
+    passport: "Passeport piscine",
+    passportText: "Historique et export PDF.",
+    note: "Bluu3 aide au pilotage et à la documentation. L'Eco-Score MVP est un indicateur interne, pas une certification finale.",
+    productTitle: "Un MVP utilisable pour les piscinistes et leurs clients.",
+    productText: "Démarrer avec des données réelles, une base PostgreSQL, des rôles simples et des rapports exploitables. Les capteurs et l'IA avancée pourront arriver ensuite.",
+    bullets: ["Dashboard pisciniste B2B alimenté par PostgreSQL", "Espace propriétaire B2C simple et responsive", "Exports PDF pour suivi mensuel et interventions"],
+    preview: "Aperçu MVP",
+    waterQuality: "Qualité eau",
+    warning: "Attention",
+    lastMeasure: "Dernière mesure : aujourd'hui 09:12",
+    ready: "Prêt",
+    monthlyReport: "Rapport mensuel : prêt",
+    ecoText: "Un score 0-100 avec grade A à E pour visualiser l'eau, l'énergie, la chimie, les déplacements et le CO2. Cette version est un indicateur MVP, pas une certification.",
+    identity: "Identité",
+    identityText: "Piscine, propriétaire, pisciniste et équipements.",
+    history: "Historique",
+    historyText: "Mesures, interventions et statut de santé.",
+    exportLabel: "Export",
+    exportText: "QR code placeholder et PDF simple pour les pilotes.",
+    deploymentTitle: "Déploiement MVP pour pilotes",
+    deploymentText: "Railway pour l'API Node, PostgreSQL, staging, production MVP et variables d'environnement.",
+    accessDashboard: "Accéder au dashboard",
+    rights: "Tous droits réservés.",
+  },
+  en: {
+    title: "Bluu3 - Your pool, always under control",
+    description: "Pool SaaS for measurements, interventions, MVP Eco-Score, Pool Passport and owner tracking.",
+    badge: "Pool SaaS MVP",
+    navProduct: "Product",
+    dashboard: "Dashboard",
+    testApp: "Test the app",
+    headline: "Bluu3 — your pool, always under control.",
+    intro: "Water measurements, interventions, alerts, MVP Eco-Score and Pool Passport for pool professionals, owners and first pilots.",
+    demo: "Request a demo",
+    product: "View product",
+    measurements: "Measurements",
+    measurementsText: "pH, chlorine, temperature, ORP.",
+    interventions: "Interventions",
+    interventionsText: "Planning, statuses, reports.",
+    passport: "Pool Passport",
+    passportText: "History and PDF export.",
+    note: "Bluu3 helps with operations and documentation. The MVP Eco-Score is an internal indicator, not a final certification.",
+    productTitle: "A usable MVP for pool professionals and their clients.",
+    productText: "Start with real data, a PostgreSQL database, simple roles and actionable reports. Sensors and advanced AI can come next.",
+    bullets: ["B2B pool professional dashboard powered by PostgreSQL", "Simple responsive B2C owner space", "PDF exports for monthly tracking and interventions"],
+    preview: "MVP preview",
+    waterQuality: "Water quality",
+    warning: "Attention",
+    lastMeasure: "Last measurement: today 09:12",
+    ready: "Ready",
+    monthlyReport: "Monthly report: ready",
+    ecoText: "A 0-100 score with A to E grades to visualize water, energy, chemistry, travel and CO2. This version is an MVP indicator, not a certification.",
+    identity: "Identity",
+    identityText: "Pool, owner, pool professional and equipment.",
+    history: "History",
+    historyText: "Measurements, interventions and health status.",
+    exportLabel: "Export",
+    exportText: "QR code placeholder and simple PDF for pilots.",
+    deploymentTitle: "MVP deployment for pilots",
+    deploymentText: "Railway for the Node API, PostgreSQL, staging, MVP production and environment variables.",
+    accessDashboard: "Open dashboard",
+    rights: "All rights reserved.",
+  },
+  es: {
+    title: "Bluu3 - Tu piscina, siempre bajo control",
+    description: "SaaS de piscinas para mediciones, intervenciones, Eco-Score MVP, Pool Passport y seguimiento del propietario.",
+    badge: "MVP SaaS piscina",
+    navProduct: "Producto",
+    dashboard: "Dashboard",
+    testApp: "Probar la app",
+    headline: "Bluu3 — tu piscina, siempre bajo control.",
+    intro: "Mediciones del agua, intervenciones, alertas, Eco-Score MVP y Pool Passport para piscineros, propietarios y primeros pilotos.",
+    demo: "Pedir una demo",
+    product: "Ver producto",
+    measurements: "Mediciones",
+    measurementsText: "pH, cloro, temperatura, ORP.",
+    interventions: "Intervenciones",
+    interventionsText: "Planificacion, estados, informes.",
+    passport: "Pasaporte piscina",
+    passportText: "Historial y exportacion PDF.",
+    note: "Bluu3 ayuda con la gestion y documentacion. El Eco-Score MVP es un indicador interno, no una certificacion final.",
+    productTitle: "Un MVP utilizable para piscineros y sus clientes.",
+    productText: "Empezar con datos reales, una base PostgreSQL, roles simples e informes accionables. Los sensores y la IA avanzada pueden llegar despues.",
+    bullets: ["Dashboard B2B para piscineros con PostgreSQL", "Espacio propietario B2C simple y responsive", "Exportaciones PDF para seguimiento mensual e intervenciones"],
+    preview: "Vista MVP",
+    waterQuality: "Calidad del agua",
+    warning: "Atencion",
+    lastMeasure: "Ultima medicion: hoy 09:12",
+    ready: "Listo",
+    monthlyReport: "Informe mensual: listo",
+    ecoText: "Una puntuacion 0-100 con grado A a E para visualizar agua, energia, quimica, desplazamientos y CO2. Esta version es un indicador MVP, no una certificacion.",
+    identity: "Identidad",
+    identityText: "Piscina, propietario, piscinero y equipos.",
+    history: "Historial",
+    historyText: "Mediciones, intervenciones y estado de salud.",
+    exportLabel: "Exportacion",
+    exportText: "QR placeholder y PDF simple para pilotos.",
+    deploymentTitle: "Despliegue MVP para pilotos",
+    deploymentText: "Railway para la API Node, PostgreSQL, staging, produccion MVP y variables de entorno.",
+    accessDashboard: "Abrir dashboard",
+    rights: "Todos los derechos reservados.",
+  },
+};
+const copy = copyByLang[localeFromPath];
+const basePrefix = localeFromPath === "fr" ? "" : `/${localeFromPath}`;
+const localeOptions = [
+  { code: "fr", label: "FR", href: "/" },
+  { code: "en", label: "EN", href: "/en" },
+  { code: "es", label: "ES", href: "/es" },
+];
 ---
 <BaseLayout
-  title="Bluu3 - Votre piscine, toujours sous contrôle"
-  description="SaaS piscine pour mesures, interventions, Eco-Score MVP, Pool Passport et suivi propriétaire."
+  title={copy.title}
+  description={copy.description}
   themeColor="#020617"
+  lang={localeFromPath}
   bodyClass="bg-slate-950 text-white antialiased"
 >
     <header class="sticky top-0 z-50 border-b border-white/10 bg-slate-950/60 backdrop-blur">
@@ -15,23 +143,54 @@ const HERO_IMAGE = "/Gemini_Generated_Image_aw8b9saw8b9saw8b.png";
           <div class="h-9 w-9 rounded-full border border-white/20 bg-white/10"></div>
           <div class="font-display text-2xl font-semibold leading-none tracking-tight">Bluu3</div>
           <span class="ml-2 rounded-full border border-white/15 bg-white/5 px-2 py-1 text-xs text-white/80">
-            MVP SaaS piscine
+            {copy.badge}
           </span>
         </div>
 
         <nav class="hidden items-center gap-6 text-sm text-white/80 md:flex">
-          <a class="hover:text-white" href="#product">Produit</a>
+          <a class="hover:text-white" href="#product">{copy.navProduct}</a>
           <a class="hover:text-white" href="#passport">Pool Passport</a>
           <a class="hover:text-white" href="#eco-score">Eco-Score</a>
-          <a class="hover:text-white" href="/app">Dashboard</a>
+          <a class="hover:text-white" href={`${basePrefix}/app`}>{copy.dashboard}</a>
         </nav>
 
+        <div class="hidden items-center gap-2 rounded-xl border border-white/10 bg-white/5 p-1 sm:inline-flex">
+          {localeOptions.map((option) => (
+            <a
+              href={option.href}
+              class:list={[
+                "rounded-lg px-2 py-1 text-xs font-semibold",
+                option.code === localeFromPath
+                  ? "bg-emerald-400 text-slate-950"
+                  : "text-white/75 hover:bg-white/10 hover:text-white",
+              ]}
+            >
+              {option.label}
+            </a>
+          ))}
+        </div>
+
         <a
-          href="/app/logs/new"
+          href={`${basePrefix}/app/logs/new`}
           class="rounded-xl bg-emerald-500/90 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-emerald-400"
         >
-          Tester l'app
+          {copy.testApp}
         </a>
+      </div>
+      <div class="mx-auto flex max-w-6xl gap-2 px-4 pb-4 sm:hidden">
+        {localeOptions.map((option) => (
+          <a
+            href={option.href}
+            class:list={[
+              "rounded-lg border px-3 py-2 text-xs font-semibold",
+              option.code === localeFromPath
+                ? "border-emerald-300/60 bg-emerald-400/20 text-emerald-100"
+                : "border-white/10 bg-white/5 text-white/75",
+            ]}
+          >
+            {option.label}
+          </a>
+        ))}
       </div>
     </header>
 
@@ -56,12 +215,11 @@ const HERO_IMAGE = "/Gemini_Generated_Image_aw8b9saw8b9saw8b.png";
           </div>
 
           <h1 class="font-display mt-6 text-5xl font-semibold leading-tight tracking-tight md:text-7xl">
-            Bluu3 — votre piscine, toujours sous contrôle.
+            {copy.headline}
           </h1>
 
           <p class="mt-5 text-lg leading-relaxed text-white/80 md:text-xl">
-            Mesures d'eau, interventions, alertes, Eco-Score MVP et Pool Passport pour piscinistes,
-            propriétaires et premiers pilotes.
+            {copy.intro}
           </p>
 
           <div class="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -69,34 +227,33 @@ const HERO_IMAGE = "/Gemini_Generated_Image_aw8b9saw8b9saw8b.png";
               href="#demo"
               class="rounded-xl bg-white px-5 py-3 text-sm font-semibold text-slate-950 hover:bg-white/90"
             >
-              Demander une démo
+              {copy.demo}
             </a>
             <a
-              href="/app"
+              href={`${basePrefix}/app`}
               class="rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10"
             >
-              Voir le produit
+              {copy.product}
             </a>
           </div>
 
           <div class="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-3">
             <div class="rounded-2xl border border-white/15 bg-white/5 p-4">
-              <div class="text-sm font-semibold">Mesures</div>
-              <div class="mt-1 text-sm text-white/70">pH, chlore, température, ORP.</div>
+              <div class="text-sm font-semibold">{copy.measurements}</div>
+              <div class="mt-1 text-sm text-white/70">{copy.measurementsText}</div>
             </div>
             <div class="rounded-2xl border border-white/15 bg-white/5 p-4">
-              <div class="text-sm font-semibold">Interventions</div>
-              <div class="mt-1 text-sm text-white/70">Planning, statuts, rapports.</div>
+              <div class="text-sm font-semibold">{copy.interventions}</div>
+              <div class="mt-1 text-sm text-white/70">{copy.interventionsText}</div>
             </div>
             <div class="rounded-2xl border border-white/15 bg-white/5 p-4">
-              <div class="text-sm font-semibold">Passeport piscine</div>
-              <div class="mt-1 text-sm text-white/70">Historique et export PDF.</div>
+              <div class="text-sm font-semibold">{copy.passport}</div>
+              <div class="mt-1 text-sm text-white/70">{copy.passportText}</div>
             </div>
           </div>
 
           <p class="mt-8 text-xs text-white/60">
-            Bluu3 aide au pilotage et à la documentation. L'Eco-Score MVP est un indicateur interne,
-            pas une certification finale.
+            {copy.note}
           </p>
         </div>
       </div>
@@ -105,43 +262,42 @@ const HERO_IMAGE = "/Gemini_Generated_Image_aw8b9saw8b9saw8b.png";
     <section id="product" class="border-t border-white/10">
       <div class="mx-auto grid max-w-6xl gap-8 px-4 py-16 md:grid-cols-2 md:items-center">
         <div>
-          <h2 class="font-display text-4xl font-semibold tracking-tight md:text-5xl">Un MVP utilisable pour les piscinistes et leurs clients.</h2>
+          <h2 class="font-display text-4xl font-semibold tracking-tight md:text-5xl">{copy.productTitle}</h2>
           <p class="mt-3 text-white/70">
-            Démarrer avec des données réelles, une base PostgreSQL, des rôles simples et des rapports
-            exploitables. Les capteurs et l'IA avancée pourront arriver ensuite.
+            {copy.productText}
           </p>
 
           <ul class="mt-6 space-y-3 text-sm text-white/80">
-            <li class="flex gap-2"><span class="mt-1 h-2 w-2 rounded-full bg-emerald-400"></span> Dashboard pisciniste B2B alimenté par PostgreSQL</li>
-            <li class="flex gap-2"><span class="mt-1 h-2 w-2 rounded-full bg-emerald-400"></span> Espace propriétaire B2C simple et responsive</li>
-            <li class="flex gap-2"><span class="mt-1 h-2 w-2 rounded-full bg-emerald-400"></span> Exports PDF pour suivi mensuel et interventions</li>
+            {copy.bullets.map((bullet) => (
+              <li class="flex gap-2"><span class="mt-1 h-2 w-2 rounded-full bg-emerald-400"></span> {bullet}</li>
+            ))}
           </ul>
         </div>
 
         <div class="rounded-3xl border border-white/15 bg-white/5 p-6">
-          <div class="text-sm font-semibold text-white/90">Aperçu MVP</div>
+          <div class="text-sm font-semibold text-white/90">{copy.preview}</div>
 
           <div class="mt-4 space-y-4">
             <div class="rounded-2xl border border-white/10 bg-slate-950/40 p-4">
               <div class="text-sm font-semibold">Villa - Miami</div>
               <div class="mt-2 flex items-center justify-between text-sm text-white/75">
-                <span>Qualité eau</span><span class="text-amber-300">Attention</span>
+                <span>{copy.waterQuality}</span><span class="text-amber-300">{copy.warning}</span>
               </div>
               <div class="mt-2 flex items-center justify-between text-sm text-white/75">
                 <span>Eco-Score MVP</span><span class="text-amber-300">C</span>
               </div>
-              <div class="mt-2 text-xs text-white/60">Dernière mesure : aujourd'hui 09:12</div>
+              <div class="mt-2 text-xs text-white/60">{copy.lastMeasure}</div>
             </div>
 
             <div class="rounded-2xl border border-white/10 bg-slate-950/40 p-4">
               <div class="text-sm font-semibold">Boutique Hotel - Nice</div>
               <div class="mt-2 flex items-center justify-between text-sm text-white/75">
-                <span>Qualité eau</span><span class="text-emerald-300">OK</span>
+                <span>{copy.waterQuality}</span><span class="text-emerald-300">OK</span>
               </div>
               <div class="mt-2 flex items-center justify-between text-sm text-white/75">
-                <span>Pool Passport</span><span class="text-emerald-300">Prêt</span>
+                <span>Pool Passport</span><span class="text-emerald-300">{copy.ready}</span>
               </div>
-              <div class="mt-2 text-xs text-white/60">Rapport mensuel : prêt</div>
+              <div class="mt-2 text-xs text-white/60">{copy.monthlyReport}</div>
             </div>
           </div>
         </div>
@@ -151,7 +307,7 @@ const HERO_IMAGE = "/Gemini_Generated_Image_aw8b9saw8b9saw8b.png";
     <section id="eco-score" class="border-t border-white/10">
       <div class="mx-auto max-w-6xl px-4 py-16">
         <h2 class="font-display text-4xl font-semibold tracking-tight md:text-5xl">Eco-Score MVP</h2>
-        <p class="mt-3 max-w-3xl text-white/70">Un score 0-100 avec grade A à E pour visualiser l'eau, l'énergie, la chimie, les déplacements et le CO2. Cette version est un indicateur MVP, pas une certification.</p>
+        <p class="mt-3 max-w-3xl text-white/70">{copy.ecoText}</p>
       </div>
     </section>
 
@@ -160,16 +316,16 @@ const HERO_IMAGE = "/Gemini_Generated_Image_aw8b9saw8b9saw8b.png";
         <h2 class="font-display text-4xl font-semibold tracking-tight md:text-5xl">Pool Passport MVP</h2>
         <div class="mt-8 grid gap-4 md:grid-cols-3">
           <div class="rounded-2xl border border-white/15 bg-white/5 p-6">
-            <div class="text-sm font-semibold">Identité</div>
-            <p class="mt-2 text-sm text-white/70">Piscine, propriétaire, pisciniste et équipements.</p>
+            <div class="text-sm font-semibold">{copy.identity}</div>
+            <p class="mt-2 text-sm text-white/70">{copy.identityText}</p>
           </div>
           <div class="rounded-2xl border border-white/15 bg-white/5 p-6">
-            <div class="text-sm font-semibold">Historique</div>
-            <p class="mt-2 text-sm text-white/70">Mesures, interventions et statut de santé.</p>
+            <div class="text-sm font-semibold">{copy.history}</div>
+            <p class="mt-2 text-sm text-white/70">{copy.historyText}</p>
           </div>
           <div class="rounded-2xl border border-white/15 bg-white/5 p-6">
-            <div class="text-sm font-semibold">Export</div>
-            <p class="mt-2 text-sm text-white/70">QR code placeholder et PDF simple pour les pilotes.</p>
+            <div class="text-sm font-semibold">{copy.exportLabel}</div>
+            <p class="mt-2 text-sm text-white/70">{copy.exportText}</p>
           </div>
         </div>
       </div>
@@ -178,20 +334,20 @@ const HERO_IMAGE = "/Gemini_Generated_Image_aw8b9saw8b9saw8b.png";
     <section id="pricing" class="border-t border-white/10">
       <div class="mx-auto max-w-6xl px-4 py-16">
         <div class="rounded-3xl border border-white/15 bg-gradient-to-r from-white/5 to-white/0 p-8 md:p-10">
-          <h2 class="font-display text-4xl font-semibold tracking-tight md:text-5xl">Déploiement MVP pour pilotes</h2>
-          <p class="mt-3 text-white/70">Railway pour l'API Node, PostgreSQL, staging, production MVP et variables d'environnement.</p>
+          <h2 class="font-display text-4xl font-semibold tracking-tight md:text-5xl">{copy.deploymentTitle}</h2>
+          <p class="mt-3 text-white/70">{copy.deploymentText}</p>
           <div class="mt-6 flex flex-col gap-3 sm:flex-row" id="demo">
             <a
               href="#"
               class="rounded-xl bg-emerald-500/90 px-5 py-3 text-sm font-semibold text-slate-950 hover:bg-emerald-400"
             >
-              Demander une démo
+              {copy.demo}
             </a>
             <a
               href="#"
               class="rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white hover:bg-white/10"
             >
-              Accéder au dashboard
+              {copy.accessDashboard}
             </a>
           </div>
         </div>
@@ -200,7 +356,7 @@ const HERO_IMAGE = "/Gemini_Generated_Image_aw8b9saw8b9saw8b.png";
 
     <footer class="border-t border-white/10 py-10">
       <div class="mx-auto max-w-6xl px-4 text-sm text-white/60">
-        &copy; {new Date().getFullYear()} Bluu3. Tous droits réservés.
+        &copy; {new Date().getFullYear()} Bluu3. {copy.rights}
       </div>
     </footer>
 </BaseLayout>
