@@ -27,7 +27,32 @@ const messages = [
   },
 ];
 
-export default function WinterMessages() {
+const copyByLang = {
+  fr: {
+    generate: "Générer tous les messages hivernage",
+    sendAll: "Envoyer tous",
+    generated: "6 messages générés en 4 secondes. Projection : 80 messages en 30 secondes.",
+    sent: "Messages envoyés.",
+    label: "Message",
+  },
+  en: {
+    generate: "Generate all winterization messages",
+    sendAll: "Send all",
+    generated: "6 messages generated in 4 seconds. Projection: 80 messages in 30 seconds.",
+    sent: "Messages sent.",
+    label: "Message",
+  },
+  es: {
+    generate: "Generar todos los mensajes de invernaje",
+    sendAll: "Enviar todos",
+    generated: "6 mensajes generados en 4 segundos. Proyección: 80 mensajes en 30 segundos.",
+    sent: "Mensajes enviados.",
+    label: "Mensaje",
+  },
+};
+
+export default function WinterMessages({ lang = "fr" }) {
+  const copy = copyByLang[lang] ?? copyByLang.fr;
   const [generated, setGenerated] = useState(false);
   const [sent, setSent] = useState(false);
 
@@ -42,7 +67,7 @@ export default function WinterMessages() {
           }}
           className="rounded-2xl bg-emerald-400 px-4 py-3 text-sm font-semibold text-slate-950 hover:bg-emerald-300"
         >
-          Générer tous les messages hivernage
+          {copy.generate}
         </button>
         <button
           type="button"
@@ -50,14 +75,14 @@ export default function WinterMessages() {
           onClick={() => setSent(true)}
           className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40"
         >
-          Envoyer tous
+          {copy.sendAll}
         </button>
       </div>
 
       {generated && (
         <div className="rounded-2xl border border-emerald-400/30 bg-emerald-400/10 p-4 text-sm text-emerald-100">
-          6 messages générés en 4 secondes. Projection : 80 messages en 30 secondes.
-          {sent && <span className="ml-2 font-semibold">Messages envoyés.</span>}
+          {copy.generated}
+          {sent && <span className="ml-2 font-semibold">{copy.sent}</span>}
         </div>
       )}
 
@@ -65,7 +90,7 @@ export default function WinterMessages() {
         <div className="grid gap-3">
           {messages.map((message, index) => (
             <article key={message.client} className="rounded-2xl border border-white/10 bg-slate-950/45 p-4">
-              <div className="text-sm font-semibold text-white">Message {index + 1} - {message.client}</div>
+              <div className="text-sm font-semibold text-white">{copy.label} {index + 1} - {message.client}</div>
               <p className="mt-2 text-sm leading-6 text-white/72">{message.text}</p>
             </article>
           ))}

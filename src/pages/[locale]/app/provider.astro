@@ -1,0 +1,10 @@
+---
+import ProviderPage from "../../app/provider.astro";
+
+export const prerender = true;
+
+export function getStaticPaths() {
+  return [{ params: { locale: "en" } }, { params: { locale: "es" } }];
+}
+---
+<ProviderPage />

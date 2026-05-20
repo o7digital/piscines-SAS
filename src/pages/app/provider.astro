@@ -3,6 +3,115 @@ import AppLayout from "../../layouts/AppLayout.astro";
 import FerrariRecoveryCurve from "../../components/app/FerrariRecoveryCurve.jsx";
 import WinterMessages from "../../components/app/WinterMessages.jsx";
 
+const localeFromPath = Astro.url.pathname.startsWith("/en/") ? "en" : Astro.url.pathname.startsWith("/es/") ? "es" : "fr";
+const tr = {
+  fr: {
+    description: "Cockpit pisciniste Bluu3",
+    c1: "C1 · Dashboard cockpit",
+    heading: "Jean-Marc Marinelli · Marinelli Piscines",
+    intro: "Ajaccio · 6 bassins dans la démo, représentant un parc réel de 80 bassins · Lundi 19 mai 2026",
+    criticalAlerts: "alertes critiques",
+    watch: "surveillance",
+    healthyPools: "bassins sains",
+    redLegend: "Rouge · intervention prioritaire",
+    orangeLegend: "Orange · surveillance",
+    greenLegend: "Vert · bassin sain",
+    demoActions: "Actions démo",
+    tourLink: "Tournée du jour",
+    messagesLink: "Générer messages",
+    suppliesLink: "Prévisions consommables",
+    parkTitle: "Liste du parc triée par urgence",
+    client: "Client",
+    address: "Adresse",
+    chlorine: "Chlore",
+    status: "Statut",
+    c2: "C2 · Diagnostic pré-intervention",
+    equipment: "45 m3 · Traitement chlore · Pompe Pentair 0,75 kW · Capteur Ondilo ICO · Dernière sync 09h14",
+    phRisk: "Risque irritation + corrosion",
+    chlorineRisk: "Risque algues",
+    diagnosis: "Diagnostic Bluu3 AI : apporter 300g pH+, 200g chlore choc granulé 56%, 100ml algicide préventif. Durée estimée : 35 minutes. Priorité haute avant mercredi 21 mai.",
+    c3: "C3 · Tournée optimisée",
+    date: "Lundi 19 mai 2026",
+    noVisit: "Aucune visite requise cette semaine",
+    c4: "C4 · Fonction signature Bluu3 AI",
+    bulkTitle: "Génération de messages en masse",
+    winterContext: "Contexte : préparation hivernage octobre 2026. Montrer ce bouton en direct devant le comité CAPI.",
+    c5: "C5 · Prévision consommables",
+    suppliesTitle: "Besoins 4 semaines · 19 mai -> 19 juin 2026",
+    orderNote: "Commander avant le 21 mai pour livraison avant la canicule. Economies estimées : -18% de gaspillage, -32 euros sur la commande mensuelle.",
+  },
+  en: {
+    description: "Bluu3 pool professional cockpit",
+    c1: "C1 · Cockpit dashboard",
+    heading: "Jean-Marc Marinelli · Marinelli Pools",
+    intro: "Ajaccio · 6 pools in the demo, representing a real portfolio of 80 pools · Monday, May 19, 2026",
+    criticalAlerts: "critical alerts",
+    watch: "monitoring",
+    healthyPools: "healthy pools",
+    redLegend: "Red · priority intervention",
+    orangeLegend: "Orange · monitoring",
+    greenLegend: "Green · healthy pool",
+    demoActions: "Demo actions",
+    tourLink: "Daily route",
+    messagesLink: "Generate messages",
+    suppliesLink: "Consumables forecast",
+    parkTitle: "Pool portfolio sorted by urgency",
+    client: "Client",
+    address: "Address",
+    chlorine: "Chlorine",
+    status: "Status",
+    c2: "C2 · Pre-intervention diagnosis",
+    equipment: "45 m3 · Chlorine treatment · Pentair 0.75 kW pump · Ondilo ICO sensor · Last sync 09:14",
+    phRisk: "Irritation + corrosion risk",
+    chlorineRisk: "Algae risk",
+    diagnosis: "Bluu3 AI diagnosis: bring 300g pH+, 200g 56% granular shock chlorine, 100ml preventive algaecide. Estimated duration: 35 minutes. High priority before Wednesday, May 21.",
+    c3: "C3 · Optimized route",
+    date: "Monday, May 19, 2026",
+    noVisit: "No visit required this week",
+    c4: "C4 · Bluu3 AI signature feature",
+    bulkTitle: "Bulk message generation",
+    winterContext: "Context: October 2026 winterization preparation. Show this button live to the CAPI committee.",
+    c5: "C5 · Consumables forecast",
+    suppliesTitle: "4-week needs · May 19 -> June 19, 2026",
+    orderNote: "Order before May 21 for delivery before the heatwave. Estimated savings: -18% waste, -32 euros on the monthly order.",
+  },
+  es: {
+    description: "Panel piscinero Bluu3",
+    c1: "C1 · Panel operativo",
+    heading: "Jean-Marc Marinelli · Piscinas Marinelli",
+    intro: "Ajaccio · 6 piscinas en la demo, representando una cartera real de 80 piscinas · Lunes 19 de mayo de 2026",
+    criticalAlerts: "alertas críticas",
+    watch: "vigilancia",
+    healthyPools: "piscinas sanas",
+    redLegend: "Rojo · intervención prioritaria",
+    orangeLegend: "Naranja · vigilancia",
+    greenLegend: "Verde · piscina sana",
+    demoActions: "Acciones demo",
+    tourLink: "Ruta del día",
+    messagesLink: "Generar mensajes",
+    suppliesLink: "Previsión de consumibles",
+    parkTitle: "Parque de piscinas ordenado por urgencia",
+    client: "Cliente",
+    address: "Dirección",
+    chlorine: "Cloro",
+    status: "Estado",
+    c2: "C2 · Diagnóstico preintervención",
+    equipment: "45 m3 · Tratamiento con cloro · Bomba Pentair 0,75 kW · Sensor Ondilo ICO · Última sync 09:14",
+    phRisk: "Riesgo de irritación + corrosión",
+    chlorineRisk: "Riesgo de algas",
+    diagnosis: "Diagnóstico Bluu3 AI: llevar 300g pH+, 200g cloro de choque granulado 56%, 100ml algicida preventivo. Duración estimada: 35 minutos. Prioridad alta antes del miércoles 21 de mayo.",
+    c3: "C3 · Ruta optimizada",
+    date: "Lunes 19 de mayo de 2026",
+    noVisit: "No se requiere visita esta semana",
+    c4: "C4 · Función distintiva Bluu3 AI",
+    bulkTitle: "Generación masiva de mensajes",
+    winterContext: "Contexto: preparación de invernaje octubre 2026. Mostrar este botón en vivo ante el comité CAPI.",
+    c5: "C5 · Previsión de consumibles",
+    suppliesTitle: "Necesidades 4 semanas · 19 mayo -> 19 junio 2026",
+    orderNote: "Pedir antes del 21 de mayo para entrega antes de la ola de calor. Ahorro estimado: -18% de desperdicio, -32 euros en el pedido mensual.",
+  },
+}[localeFromPath];
+
 const pools = [
   ["B002", "M. Ferrari", "Ajaccio Centre", "45 m3", "6,8", "0,4 mg/L", "27,1°C", "52", "D", "pH + Chlore critiques", "critical"],
   ["B001", "Famille Bartoli", "Porticcio", "60 m3", "7,2", "0,8 mg/L", "26,4°C", "74", "B+", "Alerte chlore", "alert"],
@@ -42,41 +151,41 @@ const statusStyles = {
   },
 };
 ---
-<AppLayout title="Jean-Marc Marinelli" description="Cockpit pisciniste Bluu3">
+<AppLayout title="Jean-Marc Marinelli" description={tr.description} lang={localeFromPath}>
   <section class="space-y-8">
     <div class="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
       <article class="rounded-3xl border border-white/10 bg-white/5 p-7">
-        <p class="text-xs uppercase tracking-[0.2em] text-emerald-300/80">C1 · Dashboard cockpit</p>
-        <h1 class="mt-3 text-4xl font-semibold tracking-tight">Jean-Marc Marinelli · Marinelli Piscines</h1>
-        <p class="mt-3 text-white/70">Ajaccio · 6 bassins dans la démo, représentant un parc réel de 80 bassins · Lundi 19 mai 2026</p>
+        <p class="text-xs uppercase tracking-[0.2em] text-emerald-300/80">{tr.c1}</p>
+        <h1 class="mt-3 text-4xl font-semibold tracking-tight">{tr.heading}</h1>
+        <p class="mt-3 text-white/70">{tr.intro}</p>
         <div class="mt-6 grid gap-3 sm:grid-cols-3">
-          <div class="rounded-2xl border border-red-400/30 bg-red-400/10 p-4"><div class="text-3xl font-semibold text-red-200">2</div><div class="text-sm text-white/60">alertes critiques</div></div>
-          <div class="rounded-2xl border border-amber-300/30 bg-amber-400/10 p-4"><div class="text-3xl font-semibold text-amber-100">1</div><div class="text-sm text-white/60">surveillance</div></div>
-          <div class="rounded-2xl border border-emerald-400/30 bg-emerald-400/10 p-4"><div class="text-3xl font-semibold text-emerald-200">3</div><div class="text-sm text-white/60">bassins sains</div></div>
+          <div class="rounded-2xl border border-red-400/30 bg-red-400/10 p-4"><div class="text-3xl font-semibold text-red-200">2</div><div class="text-sm text-white/60">{tr.criticalAlerts}</div></div>
+          <div class="rounded-2xl border border-amber-300/30 bg-amber-400/10 p-4"><div class="text-3xl font-semibold text-amber-100">1</div><div class="text-sm text-white/60">{tr.watch}</div></div>
+          <div class="rounded-2xl border border-emerald-400/30 bg-emerald-400/10 p-4"><div class="text-3xl font-semibold text-emerald-200">3</div><div class="text-sm text-white/60">{tr.healthyPools}</div></div>
         </div>
         <div class="mt-5 flex flex-wrap gap-3 text-xs font-semibold">
-          <span class="rounded-full border border-red-400/40 bg-red-500/20 px-3 py-2 text-red-100">Rouge · intervention prioritaire</span>
-          <span class="rounded-full border border-amber-300/40 bg-amber-400/20 px-3 py-2 text-amber-100">Orange · surveillance</span>
-          <span class="rounded-full border border-emerald-300/40 bg-emerald-400/20 px-3 py-2 text-emerald-100">Vert · bassin sain</span>
+          <span class="rounded-full border border-red-400/40 bg-red-500/20 px-3 py-2 text-red-100">{tr.redLegend}</span>
+          <span class="rounded-full border border-amber-300/40 bg-amber-400/20 px-3 py-2 text-amber-100">{tr.orangeLegend}</span>
+          <span class="rounded-full border border-emerald-300/40 bg-emerald-400/20 px-3 py-2 text-emerald-100">{tr.greenLegend}</span>
         </div>
       </article>
 
       <article class="rounded-3xl border border-white/10 bg-white/5 p-7">
-        <p class="text-xs uppercase tracking-[0.2em] text-white/45">Actions démo</p>
+        <p class="text-xs uppercase tracking-[0.2em] text-white/45">{tr.demoActions}</p>
         <div class="mt-4 grid gap-3">
-          <a href="#tournee" class="rounded-2xl bg-emerald-400 px-4 py-3 text-sm font-semibold text-slate-950">Tournée du jour</a>
-          <a href="#messages" class="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-white">Générer messages</a>
-          <a href="#consommables" class="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-white">Prévisions consommables</a>
+          <a href="#tournee" class="rounded-2xl bg-emerald-400 px-4 py-3 text-sm font-semibold text-slate-950">{tr.tourLink}</a>
+          <a href="#messages" class="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-white">{tr.messagesLink}</a>
+          <a href="#consommables" class="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-white">{tr.suppliesLink}</a>
         </div>
       </article>
     </div>
 
     <article class="rounded-3xl border border-white/10 bg-white/5 p-6">
-      <h2 class="text-2xl font-semibold">Liste du parc triée par urgence</h2>
+      <h2 class="text-2xl font-semibold">{tr.parkTitle}</h2>
       <div class="mt-5 overflow-x-auto">
         <table class="min-w-full text-left text-sm">
           <thead class="text-white/45">
-            <tr><th class="py-3 pr-4">ID</th><th class="py-3 pr-4">Client</th><th class="py-3 pr-4">Adresse</th><th class="py-3 pr-4">pH</th><th class="py-3 pr-4">Chlore</th><th class="py-3 pr-4">Temp.</th><th class="py-3 pr-4">Score</th><th class="py-3 pr-4">Eco</th><th class="py-3 pr-4">Statut</th></tr>
+            <tr><th class="py-3 pr-4">ID</th><th class="py-3 pr-4">{tr.client}</th><th class="py-3 pr-4">{tr.address}</th><th class="py-3 pr-4">pH</th><th class="py-3 pr-4">{tr.chlorine}</th><th class="py-3 pr-4">Temp.</th><th class="py-3 pr-4">Score</th><th class="py-3 pr-4">Eco</th><th class="py-3 pr-4">{tr.status}</th></tr>
           </thead>
           <tbody>
             {pools.map(([id, client, city, volume, ph, chlorine, temp, score, eco, status, level]) => (
@@ -102,23 +211,23 @@ const statusStyles = {
 
     <div class="grid gap-6 xl:grid-cols-2">
       <article class="rounded-3xl border border-white/10 bg-white/5 p-6">
-        <p class="text-xs uppercase tracking-[0.2em] text-white/45">C2 · Diagnostic pré-intervention</p>
+        <p class="text-xs uppercase tracking-[0.2em] text-white/45">{tr.c2}</p>
         <h2 class="mt-2 text-2xl font-semibold">B002 · M. Ferrari</h2>
-        <p class="mt-2 text-white/65">45 m3 · Traitement chlore · Pompe Pentair 0,75 kW · Capteur Ondilo ICO · Dernière sync 09h14</p>
+        <p class="mt-2 text-white/65">{tr.equipment}</p>
         <div class="mt-5 grid gap-3 sm:grid-cols-3">
-          <div class="rounded-2xl bg-slate-950/45 p-4"><div class="text-sm text-white/50">pH</div><div class="text-3xl font-semibold text-amber-100">6,8</div><div class="text-xs text-white/45">Risque irritation + corrosion</div></div>
-          <div class="rounded-2xl bg-slate-950/45 p-4"><div class="text-sm text-white/50">Chlore</div><div class="text-3xl font-semibold text-red-200">0,4</div><div class="text-xs text-white/45">Risque algues</div></div>
+          <div class="rounded-2xl bg-slate-950/45 p-4"><div class="text-sm text-white/50">pH</div><div class="text-3xl font-semibold text-amber-100">6,8</div><div class="text-xs text-white/45">{tr.phRisk}</div></div>
+          <div class="rounded-2xl bg-slate-950/45 p-4"><div class="text-sm text-white/50">{tr.chlorine}</div><div class="text-3xl font-semibold text-red-200">0,4</div><div class="text-xs text-white/45">{tr.chlorineRisk}</div></div>
           <div class="rounded-2xl bg-slate-950/45 p-4"><div class="text-sm text-white/50">Temp.</div><div class="text-3xl font-semibold text-emerald-200">27,1°C</div><div class="text-xs text-white/45">OK</div></div>
         </div>
         <div class="mt-5 rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-4 text-white/80">
-          Diagnostic Bluu3 AI : apporter 300g pH+, 200g chlore choc granulé 56%, 100ml algicide préventif. Durée estimée : 35 minutes. Priorité haute avant mercredi 21 mai.
+          {tr.diagnosis}
         </div>
-        <FerrariRecoveryCurve client:load />
+        <FerrariRecoveryCurve lang={localeFromPath} client:load />
       </article>
 
       <article id="tournee" class="rounded-3xl border border-white/10 bg-white/5 p-6">
-        <p class="text-xs uppercase tracking-[0.2em] text-white/45">C3 · Tournée optimisée</p>
-        <h2 class="mt-2 text-2xl font-semibold">Lundi 19 mai 2026</h2>
+        <p class="text-xs uppercase tracking-[0.2em] text-white/45">{tr.c3}</p>
+        <h2 class="mt-2 text-2xl font-semibold">{tr.date}</h2>
         <div class="mt-5 space-y-3">
           {tour.map(([time, title, note, level]) => (
             <div class={`grid grid-cols-[72px_1fr] gap-3 rounded-2xl border p-4 ${statusStyles[level].row}`}>
@@ -140,17 +249,17 @@ const statusStyles = {
     </div>
 
     <article id="messages" class="rounded-3xl border border-white/10 bg-white/5 p-6">
-      <p class="text-xs uppercase tracking-[0.2em] text-emerald-300/80">C4 · Fonction signature Bluu3 AI</p>
-      <h2 class="mt-2 text-2xl font-semibold">Génération de messages en masse</h2>
-      <p class="mt-2 text-white/65">Contexte : préparation hivernage octobre 2026. Montrer ce bouton en direct devant le comité CAPI.</p>
+      <p class="text-xs uppercase tracking-[0.2em] text-emerald-300/80">{tr.c4}</p>
+      <h2 class="mt-2 text-2xl font-semibold">{tr.bulkTitle}</h2>
+      <p class="mt-2 text-white/65">{tr.winterContext}</p>
       <div class="mt-5">
-        <WinterMessages client:load />
+        <WinterMessages lang={localeFromPath} client:load />
       </div>
     </article>
 
     <article id="consommables" class="rounded-3xl border border-white/10 bg-white/5 p-6">
-      <p class="text-xs uppercase tracking-[0.2em] text-white/45">C5 · Prévision consommables</p>
-      <h2 class="mt-2 text-2xl font-semibold">Besoins 4 semaines · 19 mai -> 19 juin 2026</h2>
+      <p class="text-xs uppercase tracking-[0.2em] text-white/45">{tr.c5}</p>
+      <h2 class="mt-2 text-2xl font-semibold">{tr.suppliesTitle}</h2>
       <div class="mt-5 grid gap-3 md:grid-cols-5">
         <div class="rounded-2xl bg-slate-950/45 p-4"><div class="text-sm text-white/50">Chlore 56%</div><div class="mt-2 text-2xl font-semibold">2,8 kg</div><div class="text-xs text-amber-100">+40% canicule</div></div>
         <div class="rounded-2xl bg-slate-950/45 p-4"><div class="text-sm text-white/50">pH+</div><div class="mt-2 text-2xl font-semibold">1,2 kg</div></div>
@@ -158,7 +267,7 @@ const statusStyles = {
         <div class="rounded-2xl bg-slate-950/45 p-4"><div class="text-sm text-white/50">Algicide</div><div class="mt-2 text-2xl font-semibold">600 ml</div></div>
         <div class="rounded-2xl bg-slate-950/45 p-4"><div class="text-sm text-white/50">Stabilisant</div><div class="mt-2 text-2xl font-semibold">0,8 kg</div></div>
       </div>
-      <div class="mt-5 rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-4 text-white/80">Commander avant le 21 mai pour livraison avant la canicule. Economies estimées : -18% de gaspillage, -32 euros sur la commande mensuelle.</div>
+      <div class="mt-5 rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-4 text-white/80">{tr.orderNote}</div>
     </article>
   </section>
 </AppLayout>

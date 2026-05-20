@@ -2,21 +2,45 @@
 import BaseLayout from "./BaseLayout.astro";
 import { getAppData } from "../lib/db";
 
-const { title = "Dashboard", description = "Bluu3 operations workspace" } = Astro.props;
+const { title = "Dashboard", description = "Bluu3 operations workspace", lang = "fr" } = Astro.props;
 const pathname = Astro.url.pathname;
 const data = await getAppData();
+const basePrefix = lang === "fr" ? "" : `/${lang}`;
+const copyByLang = {
+  fr: {
+    today: "Aujourd'hui",
+    subtitle: "Mesures, interventions, Eco-Score MVP et Pool Passport.",
+    newMeasure: "Nouvelle mesure",
+    tagline: "Votre piscine, toujours sous contrôle.",
+    allPools: "Toutes les piscines",
+    mvp: "Mode MVP : PostgreSQL Railway via `DATABASE_URL`, avec données seed locales quand la base n'est pas configurée.",
+    nav: ["Vue globale", "Pisciniste", "Propriétaire", "Piscines", "Mesures", "Interventions", "Pool Passport", "Eco-Score", "Admin"],
+  },
+  en: {
+    today: "Today",
+    subtitle: "Measurements, interventions, MVP Eco-Score and Pool Passport.",
+    newMeasure: "New measurement",
+    tagline: "Your pool, always under control.",
+    allPools: "All pools",
+    mvp: "MVP mode: Railway PostgreSQL via `DATABASE_URL`, with local seed data when the database is not configured.",
+    nav: ["Overview", "Provider", "Owner", "Pools", "Measurements", "Interventions", "Pool Passport", "Eco-Score", "Admin"],
+  },
+  es: {
+    today: "Hoy",
+    subtitle: "Mediciones, intervenciones, Eco-Score MVP y Pool Passport.",
+    newMeasure: "Nueva medición",
+    tagline: "Tu piscina, siempre bajo control.",
+    allPools: "Todas las piscinas",
+    mvp: "Modo MVP: PostgreSQL Railway via `DATABASE_URL`, con datos locales de prueba cuando la base no esta configurada.",
+    nav: ["Vista global", "Piscinero", "Propietario", "Piscinas", "Mediciones", "Intervenciones", "Pool Passport", "Eco-Score", "Admin"],
+  },
+};
+const copy = copyByLang[lang] ?? copyByLang.fr;
 
-const navItems = [
-  { href: "/app", label: "Vue globale" },
-  { href: "/app/provider", label: "Pisciniste" },
-  { href: "/app/owner", label: "Propriétaire" },
-  { href: "/app/pools", label: "Piscines" },
-  { href: "/app/measurements", label: "Mesures" },
-  { href: "/app/interventions", label: "Interventions" },
-  { href: "/app/passport", label: "Pool Passport" },
-  { href: "/app/eco-score", label: "Eco-Score" },
-  { href: "/app/admin", label: "Admin" },
-];
+const navItems = ["/app", "/app/provider", "/app/owner", "/app/pools", "/app/measurements", "/app/interventions", "/app/passport", "/app/eco-score", "/app/admin"].map((href, index) => ({
+  href: `${basePrefix}${href}`,
+  label: copy.nav[index],
+}));
 
 const isActive = (href: string) => (href === "/app" ? pathname === href : pathname.startsWith(href));
 ---
@@ -24,6 +48,7 @@ const isActive = (href: string) => (href === "/app" ? pathname === href : pathna
   title={`${title} | Bluu3`}
   description={description}
   themeColor="#020617"
+  lang={lang}
   bodyClass="overflow-x-hidden bg-slate-950 text-white antialiased"
 >
   <div class="min-h-screen overflow-x-hidden lg:flex">
@@ -55,13 +80,13 @@ const isActive = (href: string) => (href === "/app" ? pathname === href : pathna
       </div>
 
       <div class="mt-8 rounded-3xl border border-white/10 bg-white/5 p-4">
-        <div class="text-xs uppercase tracking-[0.22em] text-white/45">Aujourd'hui</div>
-        <div class="mt-2 text-sm text-white/80">Mesures, interventions, Eco-Score MVP et Pool Passport.</div>
+        <div class="text-xs uppercase tracking-[0.22em] text-white/45">{copy.today}</div>
+        <div class="mt-2 text-sm text-white/80">{copy.subtitle}</div>
         <a
-          href="/app/measurements"
+          href={`${basePrefix}/app/measurements`}
           class="mt-4 inline-flex w-full items-center justify-center rounded-2xl bg-emerald-400 px-4 py-3 text-sm font-semibold text-slate-950 hover:bg-emerald-300"
         >
-          Nouvelle mesure
+          {copy.newMeasure}
         </a>
       </div>
 
@@ -83,7 +108,7 @@ const isActive = (href: string) => (href === "/app" ? pathname === href : pathna
       </nav>
 
       <div class="mt-auto rounded-3xl border border-white/10 bg-white/5 p-4 text-sm text-white/65">
-        Mode MVP : PostgreSQL Railway via `DATABASE_URL`, avec données seed locales quand la base n'est pas configurée.
+        {copy.mvp}
       </div>
     </aside>
 
@@ -103,7 +128,7 @@ const isActive = (href: string) => (href === "/app" ? pathname === href : pathna
 
           <div class="min-w-0 flex-1">
             <div class="text-xs uppercase tracking-[0.2em] text-white/45">Bluu3</div>
-            <div class="truncate text-sm text-white/70">Votre piscine, toujours sous contrôle.</div>
+            <div class="truncate text-sm text-white/70">{copy.tagline}</div>
           </div>
 
           <label class="w-full min-w-[220px] max-w-sm sm:w-auto">
@@ -111,7 +136,7 @@ const isActive = (href: string) => (href === "/app" ? pathname === href : pathna
             <select
               class="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition focus:border-emerald-400/50"
             >
-              <option value="all">Toutes les piscines</option>
+              <option value="all">{copy.allPools}</option>
               {data.pools.map((pool: any) => (
                 <option value={pool.id}>{pool.name}</option>
               ))}
@@ -119,10 +144,10 @@ const isActive = (href: string) => (href === "/app" ? pathname === href : pathna
           </label>
 
           <a
-            href="/app/measurements"
+            href={`${basePrefix}/app/measurements`}
             class="inline-flex items-center justify-center rounded-2xl bg-emerald-400 px-4 py-3 text-sm font-semibold text-slate-950 hover:bg-emerald-300"
           >
-            Nouvelle mesure
+            {copy.newMeasure}
           </a>
         </div>
       </header>

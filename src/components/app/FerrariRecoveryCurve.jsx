@@ -191,17 +191,129 @@ function buildPath(points, key) {
     .join(" ");
 }
 
-function buildClientMessage(pool, steps) {
+const copyByLang = {
+  fr: {
+    curveTitle: "Courbe de rétablissement",
+    subtitle: "correction éditable au doigt ou à la souris",
+    choosePool: "Choisir une piscine",
+    objective: "Objectif",
+    openEdit: "Ouvrir / éditer",
+    sendFleet: "Envoyer au parc",
+    healthyZone: "Zone saine",
+    dragEdit: "Glisser ou modifier",
+    sentTo: "Courbe envoyée à",
+    readyFor: "Courbe prête pour",
+    lastSent: "Dernier envoi démo à",
+    demoSent: "en démo",
+    validationHint: "Valide la courbe pour générer le message client et simuler l'envoi.",
+    resend: "Renvoyer la courbe",
+    validateSend: "Valider + envoyer",
+    validatedNotice: "Courbe validée et message envoyé à",
+    fleetNotice: "Courbes validées et messages envoyés aux 6 piscines.",
+    editTitle: "Editer la courbe de rétablissement",
+    editHelp: "Glisse les points verts pour le pH, les points jaunes pour le chlore, ou ajuste les valeurs dans la table.",
+    close: "Fermer",
+    graphicEdit: "Edition graphique directe",
+    greenPoint: "Point vert : pH",
+    yellowPoint: "Point jaune : chlore",
+    time: "Heure",
+    minute: "Minute sur la courbe",
+    action: "Action",
+    dose: "Dose",
+    result: "Résultat attendu",
+    plan: "Plan",
+    current: "actuel",
+    reset: "Réinitialiser",
+    sendMessage: "Valider + envoyer le message",
+    demoMessage: "Message envoyé en démo",
+    clientMessage: (pool, actions, finalStep) => `Bonjour, ici Jean-Marc Marinelli. J'ai validé la courbe de rétablissement de votre piscine ${pool.id} à ${pool.location}. Plan prévu : ${actions}. Objectif : eau rétablie en ${finalStep.minute} minutes, pH ${finalStep.ph.toFixed(1)} et chlore ${finalStep.chlorine.toFixed(1)}. Vous recevez aussi la courbe de suivi Bluu3.`,
+  },
+  en: {
+    curveTitle: "Recovery curve",
+    subtitle: "editable with touch or mouse",
+    choosePool: "Choose a pool",
+    objective: "Target",
+    openEdit: "Open / edit",
+    sendFleet: "Send to portfolio",
+    healthyZone: "Healthy zone",
+    dragEdit: "Drag or edit",
+    sentTo: "Curve sent to",
+    readyFor: "Curve ready for",
+    lastSent: "Last demo send at",
+    demoSent: "in demo mode",
+    validationHint: "Validate the curve to generate the client message and simulate sending.",
+    resend: "Resend curve",
+    validateSend: "Validate + send",
+    validatedNotice: "Curve validated and message sent to",
+    fleetNotice: "Curves validated and messages sent to the 6 pools.",
+    editTitle: "Edit the recovery curve",
+    editHelp: "Drag green points for pH, yellow points for chlorine, or adjust values in the table.",
+    close: "Close",
+    graphicEdit: "Direct graphic editing",
+    greenPoint: "Green point: pH",
+    yellowPoint: "Yellow point: chlorine",
+    time: "Time",
+    minute: "Minute on the curve",
+    action: "Action",
+    dose: "Dose",
+    result: "Expected result",
+    plan: "Plan",
+    current: "current",
+    reset: "Reset",
+    sendMessage: "Validate + send message",
+    demoMessage: "Demo message sent",
+    clientMessage: (pool, actions, finalStep) => `Hello, this is Jean-Marc Marinelli. I validated the recovery curve for your pool ${pool.id} in ${pool.location}. Planned sequence: ${actions}. Target: water restored in ${finalStep.minute} minutes, pH ${finalStep.ph.toFixed(1)} and chlorine ${finalStep.chlorine.toFixed(1)}. You also receive the Bluu3 tracking curve.`,
+  },
+  es: {
+    curveTitle: "Curva de recuperación",
+    subtitle: "editable con dedo o ratón",
+    choosePool: "Elegir una piscina",
+    objective: "Objetivo",
+    openEdit: "Abrir / editar",
+    sendFleet: "Enviar al parque",
+    healthyZone: "Zona sana",
+    dragEdit: "Arrastrar o editar",
+    sentTo: "Curva enviada a",
+    readyFor: "Curva lista para",
+    lastSent: "Último envío demo a las",
+    demoSent: "en modo demo",
+    validationHint: "Valida la curva para generar el mensaje del cliente y simular el envío.",
+    resend: "Reenviar curva",
+    validateSend: "Validar + enviar",
+    validatedNotice: "Curva validada y mensaje enviado a",
+    fleetNotice: "Curvas validadas y mensajes enviados a las 6 piscinas.",
+    editTitle: "Editar la curva de recuperación",
+    editHelp: "Arrastra los puntos verdes para pH, los amarillos para cloro, o ajusta los valores en la tabla.",
+    close: "Cerrar",
+    graphicEdit: "Edición gráfica directa",
+    greenPoint: "Punto verde: pH",
+    yellowPoint: "Punto amarillo: cloro",
+    time: "Hora",
+    minute: "Minuto en la curva",
+    action: "Acción",
+    dose: "Dosis",
+    result: "Resultado esperado",
+    plan: "Plan",
+    current: "actual",
+    reset: "Reiniciar",
+    sendMessage: "Validar + enviar mensaje",
+    demoMessage: "Mensaje enviado en demo",
+    clientMessage: (pool, actions, finalStep) => `Hola, soy Jean-Marc Marinelli. He validado la curva de recuperación de su piscina ${pool.id} en ${pool.location}. Plan previsto: ${actions}. Objetivo: agua recuperada en ${finalStep.minute} minutos, pH ${finalStep.ph.toFixed(1)} y cloro ${finalStep.chlorine.toFixed(1)}. También recibe la curva de seguimiento Bluu3.`,
+  },
+};
+
+function buildClientMessage(pool, steps, copy) {
   const finalStep = steps[steps.length - 1];
   const actions = steps
     .filter((step) => step.id !== "start")
     .map((step) => `${step.time} : ${step.action}`)
     .join(", ");
 
-  return `Bonjour, ici Jean-Marc Marinelli. J'ai validé la courbe de rétablissement de votre piscine ${pool.id} à ${pool.location}. Plan prévu : ${actions}. Objectif : eau rétablie en ${finalStep.minute} minutes, pH ${finalStep.ph.toFixed(1)} et chlore ${finalStep.chlorine.toFixed(1)}. Vous recevez aussi la courbe de suivi Bluu3.`;
+  return copy.clientMessage(pool, actions, finalStep);
 }
 
-export default function FerrariRecoveryCurve() {
+export default function FerrariRecoveryCurve({ lang = "fr" }) {
+  const copy = copyByLang[lang] ?? copyByLang.fr;
   const [selectedPoolId, setSelectedPoolId] = useState("B002");
   const [stepsByPool, setStepsByPool] = useState(initialStepsByPool);
   const [selectedId, setSelectedId] = useState("ph");
@@ -307,7 +419,7 @@ export default function FerrariRecoveryCurve() {
   };
 
   const validateAndSendSelected = () => {
-    const message = buildClientMessage(selectedPool, steps);
+    const message = buildClientMessage(selectedPool, steps, copy);
 
     setSentCurves((current) => ({
       ...current,
@@ -316,7 +428,7 @@ export default function FerrariRecoveryCurve() {
         message,
       },
     }));
-    setSendNotice(`Courbe validée et message envoyé à ${selectedPool.client}.`);
+    setSendNotice(`${copy.validatedNotice} ${selectedPool.client}.`);
     setIsOpen(false);
   };
 
@@ -326,11 +438,11 @@ export default function FerrariRecoveryCurve() {
       const poolSteps = stepsByPool[pool.id] ?? buildInitialSteps(pool);
       nextSentCurves[pool.id] = {
         sentAt: new Date().toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }),
-        message: buildClientMessage(pool, poolSteps),
+        message: buildClientMessage(pool, poolSteps, copy),
       };
     });
     setSentCurves(nextSentCurves);
-    setSendNotice("Courbes validées et messages envoyés aux 6 piscines.");
+    setSendNotice(copy.fleetNotice);
   };
 
   const selectedSend = sentCurves[selectedPoolId];
@@ -340,36 +452,36 @@ export default function FerrariRecoveryCurve() {
     <div className="mt-5 rounded-2xl border border-white/10 bg-slate-950/35 p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <div className="text-sm font-semibold text-white">Courbe de rétablissement</div>
-          <div className="mt-1 text-xs text-white/50">{selectedPool.client} · correction éditable au doigt ou à la souris</div>
+          <div className="text-sm font-semibold text-white">{copy.curveTitle}</div>
+          <div className="mt-1 text-xs text-white/50">{selectedPool.client} · {copy.subtitle}</div>
         </div>
         <div className="flex flex-wrap gap-2">
           <select
             value={selectedPoolId}
             onChange={(event) => changePool(event.target.value)}
             className="rounded-full border border-white/10 bg-slate-950 px-3 py-1 text-xs font-semibold text-white outline-none focus:border-emerald-300/60"
-            aria-label="Choisir une piscine"
+            aria-label={copy.choosePool}
           >
             {poolScenarios.map((pool) => (
               <option key={pool.id} value={pool.id}>{pool.id} · {pool.client}</option>
             ))}
           </select>
           <span className="rounded-full border border-emerald-300/40 bg-emerald-400/15 px-3 py-1 text-xs font-semibold text-emerald-100">
-            Objectif {selectedPool.duration} min
+            {copy.objective} {selectedPool.duration} min
           </span>
           <button
             type="button"
             onClick={() => setIsOpen(true)}
             className="rounded-full bg-emerald-400 px-3 py-1 text-xs font-semibold text-slate-950 hover:bg-emerald-300"
           >
-            Ouvrir / éditer
+            {copy.openEdit}
           </button>
           <button
             type="button"
             onClick={sendAllCurves}
             className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold text-white hover:bg-white/10"
           >
-            Envoyer au parc
+            {copy.sendFleet}
           </button>
         </div>
       </div>
@@ -381,7 +493,7 @@ export default function FerrariRecoveryCurve() {
             className="h-56 w-full touch-none select-none"
             viewBox="0 0 680 230"
             role="img"
-            aria-label={`Courbe éditable de correction pH et chlore pour ${selectedPool.client}`}
+            aria-label={`${copy.curveTitle} ${selectedPool.client}`}
             onPointerMove={(event) => moveDrag("main", event)}
             onPointerUp={stopDrag}
             onPointerCancel={stopDrag}
@@ -396,7 +508,7 @@ export default function FerrariRecoveryCurve() {
               </filter>
             </defs>
             <rect x="72" y="34" width="512" height="116" rx="18" fill="#34d399" opacity="0.08" />
-            <text x="590" y="76" fill="#a7f3d0" fontSize="12" fontWeight="700">Zone saine</text>
+            <text x="590" y="76" fill="#a7f3d0" fontSize="12" fontWeight="700">{copy.healthyZone}</text>
             <text x="590" y="96" fill="#94a3b8" fontSize="11">pH 7,2 · chlore 1,6</text>
             <path d="M72 188 H620" stroke="#ffffff" strokeOpacity="0.14" />
             <path d="M72 150 H620" stroke="#ffffff" strokeOpacity="0.08" />
@@ -457,7 +569,7 @@ export default function FerrariRecoveryCurve() {
               >
                 <div className={`font-semibold ${levelStyles[point.level].text}`}>{point.title}</div>
                 <div className="text-white/65">{point.note}</div>
-                {index > 0 && <div className="mt-1 text-white/45">Glisser ou modifier</div>}
+                {index > 0 && <div className="mt-1 text-white/45">{copy.dragEdit}</div>}
               </button>
             );
           })}
@@ -487,10 +599,10 @@ export default function FerrariRecoveryCurve() {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <div className="text-sm font-semibold text-emerald-100">
-              {selectedSend ? `Courbe envoyée à ${selectedPool.client}` : `Courbe prête pour ${selectedPool.client}`}
+              {selectedSend ? `${copy.sentTo} ${selectedPool.client}` : `${copy.readyFor} ${selectedPool.client}`}
             </div>
             <div className="mt-1 text-xs text-white/55">
-              {selectedSend ? `Dernier envoi démo à ${selectedSend.sentAt}.` : sentCount > 0 ? `${sentCount} courbe${sentCount > 1 ? "s" : ""} envoyée${sentCount > 1 ? "s" : ""} en démo.` : "Valide la courbe pour générer le message client et simuler l'envoi."}
+              {selectedSend ? `${copy.lastSent} ${selectedSend.sentAt}.` : sentCount > 0 ? `${sentCount} ${copy.curveTitle.toLowerCase()}${sentCount > 1 ? "s" : ""} ${copy.demoSent}.` : copy.validationHint}
             </div>
           </div>
           <button
@@ -498,7 +610,7 @@ export default function FerrariRecoveryCurve() {
             onClick={validateAndSendSelected}
             className={`rounded-xl px-4 py-2 text-sm font-semibold ${selectedSend ? "border border-emerald-300/40 bg-emerald-400/15 text-emerald-100 hover:bg-emerald-400/25" : "bg-emerald-400 text-slate-950 hover:bg-emerald-300"}`}
           >
-            {selectedSend ? "Renvoyer la courbe" : "Valider + envoyer"}
+            {selectedSend ? copy.resend : copy.validateSend}
           </button>
         </div>
         {sendNotice && (
@@ -507,30 +619,30 @@ export default function FerrariRecoveryCurve() {
           </div>
         )}
         <div className="mt-3 rounded-xl border border-white/10 bg-slate-950/40 p-3 text-sm leading-6 text-white/75">
-          {selectedSend?.message ?? buildClientMessage(selectedPool, steps)}
+          {selectedSend?.message ?? buildClientMessage(selectedPool, steps, copy)}
         </div>
       </div>
 
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center bg-slate-950/80 p-2 backdrop-blur-sm sm:items-center sm:p-4" role="dialog" aria-modal="true" aria-label={`Edition de la courbe ${selectedPool.client}`}>
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-slate-950/80 p-2 backdrop-blur-sm sm:items-center sm:p-4" role="dialog" aria-modal="true" aria-label={`${copy.editTitle} ${selectedPool.client}`}>
           <div className="max-h-[96dvh] w-full max-w-5xl overflow-y-auto rounded-2xl border border-white/10 bg-slate-950 p-4 shadow-2xl sm:max-h-[92vh] sm:rounded-3xl sm:p-5">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <div className="text-xs uppercase tracking-[0.2em] text-emerald-300/80">{selectedPool.id} · {selectedPool.client} · {selectedPool.location}</div>
-                <h3 className="mt-2 text-xl font-semibold text-white sm:text-2xl">Editer la courbe de rétablissement</h3>
-                <p className="mt-1 text-sm text-white/55">Glisse les points verts pour le pH, les points jaunes pour le chlore, ou ajuste les valeurs dans la table.</p>
+                <h3 className="mt-2 text-xl font-semibold text-white sm:text-2xl">{copy.editTitle}</h3>
+                <p className="mt-1 text-sm text-white/55">{copy.editHelp}</p>
               </div>
               <button type="button" onClick={() => setIsOpen(false)} className="rounded-full border border-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/10">
-                Fermer
+                {copy.close}
               </button>
             </div>
 
             <div className="mt-5 rounded-2xl border border-white/10 bg-white/5 p-4">
               <div className="flex flex-wrap items-center justify-between gap-3">
-                <div className="text-sm font-semibold text-white">Edition graphique directe</div>
+                <div className="text-sm font-semibold text-white">{copy.graphicEdit}</div>
                 <div className="flex flex-wrap gap-2 text-xs font-semibold">
-                  <span className="rounded-full border border-emerald-300/40 bg-emerald-400/15 px-3 py-1 text-emerald-100">Point vert : pH</span>
-                  <span className="rounded-full border border-amber-300/40 bg-amber-400/15 px-3 py-1 text-amber-100">Point jaune : chlore</span>
+                  <span className="rounded-full border border-emerald-300/40 bg-emerald-400/15 px-3 py-1 text-emerald-100">{copy.greenPoint}</span>
+                  <span className="rounded-full border border-amber-300/40 bg-amber-400/15 px-3 py-1 text-amber-100">{copy.yellowPoint}</span>
                 </div>
               </div>
               <div className="mt-3 max-w-full overflow-x-auto overscroll-x-contain">
@@ -539,13 +651,13 @@ export default function FerrariRecoveryCurve() {
                   className="h-64 min-w-[560px] w-full touch-none select-none rounded-2xl bg-slate-950/70 sm:h-72 sm:min-w-[680px]"
                   viewBox="0 0 680 230"
                   role="img"
-                  aria-label={`Edition tactile de la courbe ${selectedPool.client}`}
+                  aria-label={`${copy.graphicEdit} ${selectedPool.client}`}
                   onPointerMove={(event) => moveDrag("modal", event)}
                   onPointerUp={stopDrag}
                   onPointerCancel={stopDrag}
                 >
                   <rect x="72" y="34" width="512" height="116" rx="18" fill="#34d399" opacity="0.08" />
-                  <text x="590" y="76" fill="#a7f3d0" fontSize="12" fontWeight="700">Zone saine</text>
+                  <text x="590" y="76" fill="#a7f3d0" fontSize="12" fontWeight="700">{copy.healthyZone}</text>
                   <text x="590" y="96" fill="#94a3b8" fontSize="11">pH 7,2 · chlore 1,6</text>
                   <path d="M72 188 H620" stroke="#ffffff" strokeOpacity="0.14" />
                   <path d="M72 150 H620" stroke="#ffffff" strokeOpacity="0.08" />
@@ -609,19 +721,19 @@ export default function FerrariRecoveryCurve() {
               <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
                 <div className="grid gap-3 sm:grid-cols-2">
                   <label className="text-sm text-white/70">
-                    Heure
+                    {copy.time}
                     <input value={selectedStep.time} onChange={(event) => updateSelected("time", event.target.value)} className="mt-1 w-full rounded-xl border border-white/10 bg-slate-950 px-3 py-2 text-white outline-none focus:border-emerald-300/60" />
                   </label>
                   <label className="text-sm text-white/70">
-                    Minute sur la courbe
+                    {copy.minute}
                     <input type="number" min="0" max="60" value={selectedStep.minute} onChange={(event) => updateSelected("minute", event.target.value)} className="mt-1 w-full rounded-xl border border-white/10 bg-slate-950 px-3 py-2 text-white outline-none focus:border-emerald-300/60" />
                   </label>
                   <label className="text-sm text-white/70">
-                    Action
+                    {copy.action}
                     <input value={selectedStep.action} onChange={(event) => updateSelected("action", event.target.value)} className="mt-1 w-full rounded-xl border border-white/10 bg-slate-950 px-3 py-2 text-white outline-none focus:border-emerald-300/60" />
                   </label>
                   <label className="text-sm text-white/70">
-                    Dose
+                    {copy.dose}
                     <input value={selectedStep.dose} onChange={(event) => updateSelected("dose", event.target.value)} className="mt-1 w-full rounded-xl border border-white/10 bg-slate-950 px-3 py-2 text-white outline-none focus:border-emerald-300/60" />
                   </label>
                   <label className="text-sm text-white/70">
@@ -633,26 +745,26 @@ export default function FerrariRecoveryCurve() {
                     <input type="number" step="0.1" min="0" max="2" value={selectedStep.chlorine} onChange={(event) => updateSelected("chlorine", event.target.value)} className="mt-1 w-full rounded-xl border border-white/10 bg-slate-950 px-3 py-2 text-white outline-none focus:border-emerald-300/60" />
                   </label>
                   <label className="text-sm text-white/70 sm:col-span-2">
-                    Résultat attendu
+                    {copy.result}
                     <input value={selectedStep.result} onChange={(event) => updateSelected("result", event.target.value)} className="mt-1 w-full rounded-xl border border-white/10 bg-slate-950 px-3 py-2 text-white outline-none focus:border-emerald-300/60" />
                   </label>
                 </div>
 
                 <div className="mt-4 rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-3 text-sm text-white/75">
-                  Plan {selectedPool.client} actuel : {steps.map((step) => `${step.time} ${step.action}`).join(" -> ")}.
+                  {copy.plan} {selectedPool.client} {copy.current} : {steps.map((step) => `${step.time} ${step.action}`).join(" -> ")}.
                 </div>
 
                 <div className="mt-4 flex flex-wrap gap-2">
                   <button type="button" onClick={resetScenario} className="rounded-xl border border-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/10">
-                    Réinitialiser {selectedPool.client}
+                    {copy.reset} {selectedPool.client}
                   </button>
                   <button type="button" onClick={validateAndSendSelected} className="rounded-xl bg-emerald-400 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-emerald-300">
-                    Valider + envoyer le message
+                    {copy.sendMessage}
                   </button>
                 </div>
 
                 <div className="mt-4 rounded-2xl border border-white/10 bg-slate-950/40 p-3 text-sm leading-6 text-white/75">
-                  Message envoyé en démo : {buildClientMessage(selectedPool, steps)}
+                  {copy.demoMessage} : {buildClientMessage(selectedPool, steps, copy)}
                 </div>
               </div>
             </div>
