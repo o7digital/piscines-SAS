@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 
 const initialSteps = [
   {
@@ -83,6 +83,7 @@ const levelStyles = {
 };
 
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+const roundOne = (value) => Math.round(value * 10) / 10;
 
 function buildPath(points, key) {
   return points
@@ -94,6 +95,9 @@ export default function FerrariRecoveryCurve() {
   const [steps, setSteps] = useState(initialSteps);
   const [selectedId, setSelectedId] = useState("ph");
   const [isOpen, setIsOpen] = useState(false);
+  const [dragging, setDragging] = useState(null);
+  const mainSvgRef = useRef(null);
+  const modalSvgRef = useRef(null);
 
   const selectedStep = steps.find((step) => step.id === selectedId) ?? steps[0];
   const totalMinutes = Math.max(...steps.map((step) => step.minute), 35);
@@ -121,6 +125,54 @@ export default function FerrariRecoveryCurve() {
           : step,
       ),
     );
+  };
+
+  const updateStepFromPointer = (stepId, series, event, svgElement) => {
+    if (!svgElement) return;
+
+    const rect = svgElement.getBoundingClientRect();
+    const viewX = ((event.clientX - rect.left) / rect.width) * 680;
+    const viewY = ((event.clientY - rect.top) / rect.height) * 230;
+    const minute = Math.round(((clamp(viewX, 78, 586) - 78) / 508) * totalMinutes);
+
+    setSteps((current) =>
+      current.map((step) => {
+        if (step.id !== stepId) return step;
+
+        const next = {
+          ...step,
+          minute,
+          time: minute === 0 ? "Maintenant" : `+ ${minute} min`,
+        };
+
+        if (series === "ph") {
+          next.ph = roundOne(6.6 + ((188 - clamp(viewY, 64, 188)) / 124) * 0.8);
+        } else {
+          next.chlorine = roundOne(((188 - clamp(viewY, 64, 188)) / 124) * 2);
+        }
+
+        return next;
+      }),
+    );
+  };
+
+  const startDrag = (stepId, series, source, event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setSelectedId(stepId);
+    setDragging({ stepId, series, source });
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+    updateStepFromPointer(stepId, series, event, source === "modal" ? modalSvgRef.current : mainSvgRef.current);
+  };
+
+  const moveDrag = (source, event) => {
+    if (!dragging || dragging.source !== source) return;
+    event.preventDefault();
+    updateStepFromPointer(dragging.stepId, dragging.series, event, source === "modal" ? modalSvgRef.current : mainSvgRef.current);
+  };
+
+  const stopDrag = () => {
+    setDragging(null);
   };
 
   const resetScenario = () => {
@@ -151,7 +203,16 @@ export default function FerrariRecoveryCurve() {
 
       <div className="mt-4 overflow-x-auto">
         <div className="relative min-w-[620px] rounded-2xl bg-slate-950/45 p-4">
-          <svg className="h-56 w-full" viewBox="0 0 680 230" role="img" aria-label="Courbe éditable de correction pH et chlore pour M. Ferrari">
+          <svg
+            ref={mainSvgRef}
+            className="h-56 w-full touch-none select-none"
+            viewBox="0 0 680 230"
+            role="img"
+            aria-label="Courbe éditable de correction pH et chlore pour M. Ferrari"
+            onPointerMove={(event) => moveDrag("main", event)}
+            onPointerUp={stopDrag}
+            onPointerCancel={stopDrag}
+          >
             <defs>
               <filter id="providerGlowEditable" x="-20%" y="-20%" width="140%" height="140%">
                 <feGaussianBlur stdDeviation="4" result="blur" />
@@ -173,9 +234,26 @@ export default function FerrariRecoveryCurve() {
             <path d={buildPath(points, "chlorineY")} fill="none" stroke="#fbbf24" strokeWidth="3" strokeDasharray="8 8" strokeLinecap="round" strokeLinejoin="round" />
             {points.map((point) => (
               <g key={point.id}>
-                <button type="button" onClick={() => { setSelectedId(point.id); setIsOpen(true); }}>
-                  <circle cx={point.x} cy={point.phY} r={selectedId === point.id ? 11 : 8} fill="#020617" stroke={levelStyles[point.level].stroke} strokeWidth="3" />
-                </button>
+                <circle
+                  cx={point.x}
+                  cy={point.phY}
+                  r={selectedId === point.id ? 14 : 11}
+                  fill="#020617"
+                  stroke="#34d399"
+                  strokeWidth="4"
+                  className="cursor-grab active:cursor-grabbing"
+                  onPointerDown={(event) => startDrag(point.id, "ph", "main", event)}
+                />
+                <circle
+                  cx={point.x}
+                  cy={point.chlorineY}
+                  r={selectedId === point.id ? 11 : 9}
+                  fill="#020617"
+                  stroke="#fbbf24"
+                  strokeWidth="4"
+                  className="cursor-grab active:cursor-grabbing"
+                  onPointerDown={(event) => startDrag(point.id, "chlorine", "main", event)}
+                />
               </g>
             ))}
             <g fill="#94a3b8" fontSize="11">
@@ -206,7 +284,7 @@ export default function FerrariRecoveryCurve() {
               >
                 <div className={`font-semibold ${levelStyles[point.level].text}`}>{point.title}</div>
                 <div className="text-white/65">{point.note}</div>
-                {index > 0 && <div className="mt-1 text-white/45">Modifier</div>}
+                {index > 0 && <div className="mt-1 text-white/45">Glisser ou modifier</div>}
               </button>
             );
           })}
@@ -239,11 +317,74 @@ export default function FerrariRecoveryCurve() {
               <div>
                 <div className="text-xs uppercase tracking-[0.2em] text-emerald-300/80">B002 · M. Ferrari</div>
                 <h3 className="mt-2 text-2xl font-semibold text-white">Editer la courbe de rétablissement</h3>
-                <p className="mt-1 text-sm text-white/55">Clique une étape, ajuste le dosage ou les valeurs, la courbe se met à jour tout de suite.</p>
+                <p className="mt-1 text-sm text-white/55">Glisse les points verts pour le pH, les points jaunes pour le chlore, ou ajuste les valeurs dans la table.</p>
               </div>
               <button type="button" onClick={() => setIsOpen(false)} className="rounded-full border border-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/10">
                 Fermer
               </button>
+            </div>
+
+            <div className="mt-5 rounded-2xl border border-white/10 bg-white/5 p-4">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="text-sm font-semibold text-white">Edition graphique directe</div>
+                <div className="flex flex-wrap gap-2 text-xs font-semibold">
+                  <span className="rounded-full border border-emerald-300/40 bg-emerald-400/15 px-3 py-1 text-emerald-100">Point vert : pH</span>
+                  <span className="rounded-full border border-amber-300/40 bg-amber-400/15 px-3 py-1 text-amber-100">Point jaune : chlore</span>
+                </div>
+              </div>
+              <div className="mt-3 overflow-x-auto">
+                <svg
+                  ref={modalSvgRef}
+                  className="h-72 min-w-[680px] w-full touch-none select-none rounded-2xl bg-slate-950/70"
+                  viewBox="0 0 680 230"
+                  role="img"
+                  aria-label="Edition tactile de la courbe Ferrari"
+                  onPointerMove={(event) => moveDrag("modal", event)}
+                  onPointerUp={stopDrag}
+                  onPointerCancel={stopDrag}
+                >
+                  <rect x="72" y="34" width="512" height="116" rx="18" fill="#34d399" opacity="0.08" />
+                  <text x="590" y="76" fill="#a7f3d0" fontSize="12" fontWeight="700">Zone saine</text>
+                  <text x="590" y="96" fill="#94a3b8" fontSize="11">pH 7,2 · chlore 1,6</text>
+                  <path d="M72 188 H620" stroke="#ffffff" strokeOpacity="0.14" />
+                  <path d="M72 150 H620" stroke="#ffffff" strokeOpacity="0.08" />
+                  <path d="M72 112 H620" stroke="#ffffff" strokeOpacity="0.08" />
+                  <path d="M72 74 H620" stroke="#ffffff" strokeOpacity="0.08" />
+                  <path d="M72 36 V188" stroke="#ffffff" strokeOpacity="0.14" />
+                  <path d={buildPath(points, "phY")} fill="none" stroke="#34d399" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d={buildPath(points, "chlorineY")} fill="none" stroke="#fbbf24" strokeWidth="4" strokeDasharray="8 8" strokeLinecap="round" strokeLinejoin="round" />
+                  {points.map((point) => (
+                    <g key={point.id}>
+                      <line x1={point.x} y1="36" x2={point.x} y2="188" stroke="#ffffff" strokeOpacity={selectedId === point.id ? "0.18" : "0.06"} />
+                      <circle
+                        cx={point.x}
+                        cy={point.phY}
+                        r={selectedId === point.id ? 16 : 13}
+                        fill="#020617"
+                        stroke="#34d399"
+                        strokeWidth="5"
+                        className="cursor-grab active:cursor-grabbing"
+                        onPointerDown={(event) => startDrag(point.id, "ph", "modal", event)}
+                      />
+                      <circle
+                        cx={point.x}
+                        cy={point.chlorineY}
+                        r={selectedId === point.id ? 14 : 11}
+                        fill="#020617"
+                        stroke="#fbbf24"
+                        strokeWidth="5"
+                        className="cursor-grab active:cursor-grabbing"
+                        onPointerDown={(event) => startDrag(point.id, "chlorine", "modal", event)}
+                      />
+                      <text x={point.x - 24} y="207" fill="#94a3b8" fontSize="11">{point.minute} min</text>
+                    </g>
+                  ))}
+                  <g fill="#cbd5e1" fontSize="11">
+                    <text x="20" y="174">bas</text>
+                    <text x="18" y="78">cible</text>
+                  </g>
+                </svg>
+              </div>
             </div>
 
             <div className="mt-5 grid gap-4 lg:grid-cols-[0.8fr_1.2fr]">
