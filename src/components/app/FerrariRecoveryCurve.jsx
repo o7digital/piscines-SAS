@@ -208,6 +208,7 @@ export default function FerrariRecoveryCurve() {
   const [isOpen, setIsOpen] = useState(false);
   const [dragging, setDragging] = useState(null);
   const [sentCurves, setSentCurves] = useState({});
+  const [sendNotice, setSendNotice] = useState("");
   const mainSvgRef = useRef(null);
   const modalSvgRef = useRef(null);
 
@@ -306,13 +307,16 @@ export default function FerrariRecoveryCurve() {
   };
 
   const validateAndSendSelected = () => {
+    const message = buildClientMessage(selectedPool, steps);
+
     setSentCurves((current) => ({
       ...current,
       [selectedPoolId]: {
-        sentAt: "maintenant",
-        message: buildClientMessage(selectedPool, steps),
+        sentAt: new Date().toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }),
+        message,
       },
     }));
+    setSendNotice(`Courbe validée et message envoyé à ${selectedPool.client}.`);
     setIsOpen(false);
   };
 
@@ -321,11 +325,12 @@ export default function FerrariRecoveryCurve() {
     poolScenarios.forEach((pool) => {
       const poolSteps = stepsByPool[pool.id] ?? buildInitialSteps(pool);
       nextSentCurves[pool.id] = {
-        sentAt: "maintenant",
+        sentAt: new Date().toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }),
         message: buildClientMessage(pool, poolSteps),
       };
     });
     setSentCurves(nextSentCurves);
+    setSendNotice("Courbes validées et messages envoyés aux 6 piscines.");
   };
 
   const selectedSend = sentCurves[selectedPoolId];
@@ -485,17 +490,22 @@ export default function FerrariRecoveryCurve() {
               {selectedSend ? `Courbe envoyée à ${selectedPool.client}` : `Courbe prête pour ${selectedPool.client}`}
             </div>
             <div className="mt-1 text-xs text-white/55">
-              {sentCount > 0 ? `${sentCount} courbe${sentCount > 1 ? "s" : ""} envoyée${sentCount > 1 ? "s" : ""} en démo.` : "Valide la courbe pour générer le message client et simuler l'envoi."}
+              {selectedSend ? `Dernier envoi démo à ${selectedSend.sentAt}.` : sentCount > 0 ? `${sentCount} courbe${sentCount > 1 ? "s" : ""} envoyée${sentCount > 1 ? "s" : ""} en démo.` : "Valide la courbe pour générer le message client et simuler l'envoi."}
             </div>
           </div>
           <button
             type="button"
             onClick={validateAndSendSelected}
-            className="rounded-xl bg-emerald-400 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-emerald-300"
+            className={`rounded-xl px-4 py-2 text-sm font-semibold ${selectedSend ? "border border-emerald-300/40 bg-emerald-400/15 text-emerald-100 hover:bg-emerald-400/25" : "bg-emerald-400 text-slate-950 hover:bg-emerald-300"}`}
           >
-            Valider + envoyer
+            {selectedSend ? "Renvoyer la courbe" : "Valider + envoyer"}
           </button>
         </div>
+        {sendNotice && (
+          <div className="mt-3 rounded-xl border border-emerald-300/30 bg-emerald-300/15 px-3 py-2 text-sm font-semibold text-emerald-100">
+            {sendNotice}
+          </div>
+        )}
         <div className="mt-3 rounded-xl border border-white/10 bg-slate-950/40 p-3 text-sm leading-6 text-white/75">
           {selectedSend?.message ?? buildClientMessage(selectedPool, steps)}
         </div>
@@ -637,7 +647,7 @@ export default function FerrariRecoveryCurve() {
                     Réinitialiser {selectedPool.client}
                   </button>
                   <button type="button" onClick={validateAndSendSelected} className="rounded-xl bg-emerald-400 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-emerald-300">
-                    Valider + envoyer
+                    Valider + envoyer le message
                   </button>
                 </div>
 
