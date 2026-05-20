@@ -6,6 +6,12 @@ const { title = "Dashboard", description = "Bluu3 operations workspace", lang = 
 const pathname = Astro.url.pathname;
 const data = await getAppData();
 const basePrefix = lang === "fr" ? "" : `/${lang}`;
+const localePath = pathname.replace(/^\/(en|es)(?=\/|$)/, "") || "/app";
+const localeOptions = [
+  { code: "fr", label: "FR", href: `${localePath}` },
+  { code: "en", label: "EN", href: `/en${localePath}` },
+  { code: "es", label: "ES", href: `/es${localePath}` },
+];
 const copyByLang = {
   fr: {
     today: "Aujourd'hui",
@@ -90,6 +96,25 @@ const isActive = (href: string) => (href === "/app" ? pathname === href : pathna
         </a>
       </div>
 
+      <div class="mt-4 rounded-2xl border border-white/10 bg-white/5 p-3 lg:hidden">
+        <label class="text-xs font-semibold tracking-[0.14em] text-white/60">LANG</label>
+        <div class="mt-2 flex gap-2">
+          {localeOptions.map((option) => (
+            <a
+              href={option.href}
+              class:list={[
+                "rounded-lg border px-3 py-2 text-xs font-semibold",
+                option.code === lang
+                  ? "border-emerald-300/60 bg-emerald-400/20 text-emerald-100"
+                  : "border-white/10 bg-slate-950/50 text-white/75 hover:bg-white/10",
+              ]}
+            >
+              {option.label}
+            </a>
+          ))}
+        </div>
+      </div>
+
       <nav class="mt-8 space-y-2">
         {navItems.map((item) => (
           <a
@@ -129,6 +154,22 @@ const isActive = (href: string) => (href === "/app" ? pathname === href : pathna
           <div class="min-w-0 flex-1">
             <div class="text-xs uppercase tracking-[0.2em] text-white/45">Bluu3</div>
             <div class="truncate text-sm text-white/70">{copy.tagline}</div>
+          </div>
+
+          <div class="hidden items-center gap-2 rounded-xl border border-white/10 bg-white/5 p-1 sm:inline-flex">
+            {localeOptions.map((option) => (
+              <a
+                href={option.href}
+                class:list={[
+                  "rounded-lg px-2 py-1 text-xs font-semibold",
+                  option.code === lang
+                    ? "bg-emerald-400 text-slate-950"
+                    : "text-white/75 hover:bg-white/10 hover:text-white",
+                ]}
+              >
+                {option.label}
+              </a>
+            ))}
           </div>
 
           <label class="w-full min-w-[220px] max-w-sm sm:w-auto">
