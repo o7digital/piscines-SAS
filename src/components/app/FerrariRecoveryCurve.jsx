@@ -1,59 +1,162 @@
 import React, { useMemo, useRef, useState } from "react";
 
-const initialSteps = [
+const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+const roundOne = (value) => Math.round(value * 10) / 10;
+
+const poolScenarios = [
   {
-    id: "start",
-    time: "Maintenant",
-    title: "Départ critique",
-    note: "pH 6,8 · Cl 0,4",
-    action: "Diagnostic capteur",
-    result: "Hors cible",
+    id: "B002",
+    client: "M. Ferrari",
+    location: "Ajaccio Centre",
     level: "critical",
-    ph: 6.8,
-    chlorine: 0.4,
-    dose: "Aucun ajout",
-    minute: 0,
+    startPh: 6.8,
+    startChlorine: 0.4,
+    phAction: "pH+ 300g",
+    phDose: "300g",
+    chlorineAction: "Chlore choc 200g",
+    chlorineDose: "200g",
+    stabilizerAction: "Algicide 100ml",
+    stabilizerDose: "100ml",
+    duration: 35,
   },
   {
-    id: "ph",
-    time: "+ 10 min",
-    title: "Ajouter pH+",
-    note: "300g directement",
-    action: "pH+ 300g",
-    result: "pH remonte",
-    level: "watch",
-    ph: 7.1,
-    chlorine: 0.5,
-    dose: "300g",
-    minute: 10,
-  },
-  {
-    id: "chlorine",
-    time: "+ 20 min",
-    title: "Chlore choc",
-    note: "200g granulé 56%",
-    action: "Chlore choc 200g",
-    result: "Chlore remonte",
+    id: "B001",
+    client: "Famille Bartoli",
+    location: "Porticcio",
     level: "alert",
-    ph: 7.18,
-    chlorine: 1.1,
-    dose: "200g",
-    minute: 20,
+    startPh: 7.2,
+    startChlorine: 0.8,
+    phAction: "Contrôle pH",
+    phDose: "Aucun ajout",
+    chlorineAction: "Chlore lent 150g",
+    chlorineDose: "150g",
+    stabilizerAction: "Filtration 2h",
+    stabilizerDose: "2h",
+    duration: 25,
   },
   {
-    id: "stable",
-    time: "+ 35 min",
-    title: "Rétabli",
-    note: "Algicide 100ml",
-    action: "Algicide 100ml",
-    result: "Zone saine",
+    id: "B005",
+    client: "Mme Leonetti",
+    location: "Sarrola-Carcopino",
+    level: "watch",
+    startPh: 7.5,
+    startChlorine: 1.9,
+    phAction: "pH- 120g",
+    phDose: "120g",
+    chlorineAction: "Contrôle chlore",
+    chlorineDose: "Aucun ajout",
+    stabilizerAction: "Brossage ligne d'eau",
+    stabilizerDose: "10 min",
+    duration: 20,
+  },
+  {
+    id: "B003",
+    client: "Villa Rossignol",
+    location: "Bastelicaccia",
     level: "ok",
-    ph: 7.2,
-    chlorine: 1.6,
-    dose: "100ml",
-    minute: 35,
+    startPh: 7.3,
+    startChlorine: 2.1,
+    phAction: "Contrôle pH",
+    phDose: "OK",
+    chlorineAction: "Aération 30 min",
+    chlorineDose: "30 min",
+    stabilizerAction: "Surveillance",
+    stabilizerDose: "Aucun ajout",
+    duration: 18,
+  },
+  {
+    id: "B004",
+    client: "Résidence Moretti",
+    location: "Prunelli",
+    level: "ok",
+    startPh: 7.1,
+    startChlorine: 1.4,
+    phAction: "Contrôle pH",
+    phDose: "OK",
+    chlorineAction: "Chlore lent 80g",
+    chlorineDose: "80g",
+    stabilizerAction: "Rinçage filtre",
+    stabilizerDose: "5 min",
+    duration: 22,
+  },
+  {
+    id: "B006",
+    client: "M. Acquaviva",
+    location: "Ajaccio Sud",
+    level: "ok",
+    startPh: 7.2,
+    startChlorine: 1.6,
+    phAction: "Contrôle pH",
+    phDose: "OK",
+    chlorineAction: "Contrôle chlore",
+    chlorineDose: "OK",
+    stabilizerAction: "Validation visite",
+    stabilizerDose: "Aucun ajout",
+    duration: 15,
   },
 ];
+
+function buildInitialSteps(pool) {
+  const targetPh = pool.startPh > 7.4 ? 7.25 : Math.max(7.2, pool.startPh + 0.3);
+  const targetChlorine = pool.startChlorine < 1.5 ? 1.6 : Math.min(1.8, pool.startChlorine);
+
+  return [
+    {
+      id: "start",
+      time: "Maintenant",
+      title: pool.level === "ok" ? "Départ stable" : "Départ à corriger",
+      note: `pH ${pool.startPh.toFixed(1).replace(".", ",")} · Cl ${pool.startChlorine.toFixed(1).replace(".", ",")}`,
+      action: "Diagnostic capteur",
+      result: pool.level === "ok" ? "Sous contrôle" : "Hors cible",
+      level: pool.level,
+      ph: pool.startPh,
+      chlorine: pool.startChlorine,
+      dose: "Aucun ajout",
+      minute: 0,
+    },
+    {
+      id: "ph",
+      time: "+ 10 min",
+      title: pool.phAction,
+      note: pool.phDose,
+      action: pool.phAction,
+      result: pool.phDose === "OK" || pool.phDose === "Aucun ajout" ? "pH stable" : "pH corrigé",
+      level: pool.level === "critical" ? "watch" : pool.level,
+      ph: roundOne(targetPh),
+      chlorine: pool.startChlorine,
+      dose: pool.phDose,
+      minute: 10,
+    },
+    {
+      id: "chlorine",
+      time: "+ 20 min",
+      title: pool.chlorineAction,
+      note: pool.chlorineDose,
+      action: pool.chlorineAction,
+      result: pool.chlorineDose === "OK" || pool.chlorineDose === "Aucun ajout" ? "Chlore stable" : "Chlore corrigé",
+      level: pool.level === "ok" ? "ok" : "alert",
+      ph: roundOne(targetPh),
+      chlorine: roundOne(targetChlorine),
+      dose: pool.chlorineDose,
+      minute: Math.min(20, pool.duration),
+    },
+    {
+      id: "stable",
+      time: `+ ${pool.duration} min`,
+      title: "Rétabli",
+      note: pool.stabilizerAction,
+      action: pool.stabilizerAction,
+      result: "Zone saine",
+      level: "ok",
+      ph: roundOne(targetPh),
+      chlorine: roundOne(targetChlorine),
+      dose: pool.stabilizerDose,
+      minute: pool.duration,
+    },
+  ];
+}
+
+const initialStepsByPool = Object.fromEntries(poolScenarios.map((pool) => [pool.id, buildInitialSteps(pool)]));
 
 const levelStyles = {
   critical: {
@@ -82,23 +185,34 @@ const levelStyles = {
   },
 };
 
-const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
-const roundOne = (value) => Math.round(value * 10) / 10;
-
 function buildPath(points, key) {
   return points
     .map((point, index) => `${index === 0 ? "M" : "L"} ${point.x} ${point[key]}`)
     .join(" ");
 }
 
+function buildClientMessage(pool, steps) {
+  const finalStep = steps[steps.length - 1];
+  const actions = steps
+    .filter((step) => step.id !== "start")
+    .map((step) => `${step.time} : ${step.action}`)
+    .join(", ");
+
+  return `Bonjour, ici Jean-Marc Marinelli. J'ai validé la courbe de rétablissement de votre piscine ${pool.id} à ${pool.location}. Plan prévu : ${actions}. Objectif : eau rétablie en ${finalStep.minute} minutes, pH ${finalStep.ph.toFixed(1)} et chlore ${finalStep.chlorine.toFixed(1)}. Vous recevez aussi la courbe de suivi Bluu3.`;
+}
+
 export default function FerrariRecoveryCurve() {
-  const [steps, setSteps] = useState(initialSteps);
+  const [selectedPoolId, setSelectedPoolId] = useState("B002");
+  const [stepsByPool, setStepsByPool] = useState(initialStepsByPool);
   const [selectedId, setSelectedId] = useState("ph");
   const [isOpen, setIsOpen] = useState(false);
   const [dragging, setDragging] = useState(null);
+  const [sentCurves, setSentCurves] = useState({});
   const mainSvgRef = useRef(null);
   const modalSvgRef = useRef(null);
 
+  const selectedPool = poolScenarios.find((pool) => pool.id === selectedPoolId) ?? poolScenarios[0];
+  const steps = stepsByPool[selectedPoolId] ?? buildInitialSteps(selectedPool);
   const selectedStep = steps.find((step) => step.id === selectedId) ?? steps[0];
   const totalMinutes = Math.max(...steps.map((step) => step.minute), 35);
 
@@ -115,8 +229,9 @@ export default function FerrariRecoveryCurve() {
   );
 
   const updateSelected = (field, value) => {
-    setSteps((current) =>
-      current.map((step) =>
+    setStepsByPool((current) => ({
+      ...current,
+      [selectedPoolId]: steps.map((step) =>
         step.id === selectedId
           ? {
               ...step,
@@ -124,7 +239,7 @@ export default function FerrariRecoveryCurve() {
             }
           : step,
       ),
-    );
+    }));
   };
 
   const updateStepFromPointer = (stepId, series, event, svgElement) => {
@@ -135,8 +250,9 @@ export default function FerrariRecoveryCurve() {
     const viewY = ((event.clientY - rect.top) / rect.height) * 230;
     const minute = Math.round(((clamp(viewX, 78, 586) - 78) / 508) * totalMinutes);
 
-    setSteps((current) =>
-      current.map((step) => {
+    setStepsByPool((current) => ({
+      ...current,
+      [selectedPoolId]: (current[selectedPoolId] ?? steps).map((step) => {
         if (step.id !== stepId) return step;
 
         const next = {
@@ -153,7 +269,7 @@ export default function FerrariRecoveryCurve() {
 
         return next;
       }),
-    );
+    }));
   };
 
   const startDrag = (stepId, series, source, event) => {
@@ -176,20 +292,65 @@ export default function FerrariRecoveryCurve() {
   };
 
   const resetScenario = () => {
-    setSteps(initialSteps);
+    setStepsByPool((current) => ({
+      ...current,
+      [selectedPoolId]: buildInitialSteps(selectedPool),
+    }));
     setSelectedId("ph");
   };
+
+  const changePool = (poolId) => {
+    setSelectedPoolId(poolId);
+    setSelectedId("ph");
+    setDragging(null);
+  };
+
+  const validateAndSendSelected = () => {
+    setSentCurves((current) => ({
+      ...current,
+      [selectedPoolId]: {
+        sentAt: "maintenant",
+        message: buildClientMessage(selectedPool, steps),
+      },
+    }));
+    setIsOpen(false);
+  };
+
+  const sendAllCurves = () => {
+    const nextSentCurves = {};
+    poolScenarios.forEach((pool) => {
+      const poolSteps = stepsByPool[pool.id] ?? buildInitialSteps(pool);
+      nextSentCurves[pool.id] = {
+        sentAt: "maintenant",
+        message: buildClientMessage(pool, poolSteps),
+      };
+    });
+    setSentCurves(nextSentCurves);
+  };
+
+  const selectedSend = sentCurves[selectedPoolId];
+  const sentCount = Object.keys(sentCurves).length;
 
   return (
     <div className="mt-5 rounded-2xl border border-white/10 bg-slate-950/35 p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <div className="text-sm font-semibold text-white">Courbe de rétablissement</div>
-          <div className="mt-1 text-xs text-white/50">M. Ferrari · correction éditable en popup sur la trajectoire</div>
+          <div className="mt-1 text-xs text-white/50">{selectedPool.client} · correction éditable au doigt ou à la souris</div>
         </div>
         <div className="flex flex-wrap gap-2">
+          <select
+            value={selectedPoolId}
+            onChange={(event) => changePool(event.target.value)}
+            className="rounded-full border border-white/10 bg-slate-950 px-3 py-1 text-xs font-semibold text-white outline-none focus:border-emerald-300/60"
+            aria-label="Choisir une piscine"
+          >
+            {poolScenarios.map((pool) => (
+              <option key={pool.id} value={pool.id}>{pool.id} · {pool.client}</option>
+            ))}
+          </select>
           <span className="rounded-full border border-emerald-300/40 bg-emerald-400/15 px-3 py-1 text-xs font-semibold text-emerald-100">
-            Objectif {totalMinutes} min
+            Objectif {selectedPool.duration} min
           </span>
           <button
             type="button"
@@ -198,17 +359,24 @@ export default function FerrariRecoveryCurve() {
           >
             Ouvrir / éditer
           </button>
+          <button
+            type="button"
+            onClick={sendAllCurves}
+            className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold text-white hover:bg-white/10"
+          >
+            Envoyer au parc
+          </button>
         </div>
       </div>
 
       <div className="mt-4 overflow-x-auto">
-        <div className="relative min-w-[620px] rounded-2xl bg-slate-950/45 p-4">
+        <div className="relative min-w-[520px] rounded-2xl bg-slate-950/45 p-3 sm:min-w-[620px] sm:p-4">
           <svg
             ref={mainSvgRef}
             className="h-56 w-full touch-none select-none"
             viewBox="0 0 680 230"
             role="img"
-            aria-label="Courbe éditable de correction pH et chlore pour M. Ferrari"
+            aria-label={`Courbe éditable de correction pH et chlore pour ${selectedPool.client}`}
             onPointerMove={(event) => moveDrag("main", event)}
             onPointerUp={stopDrag}
             onPointerCancel={stopDrag}
@@ -291,7 +459,7 @@ export default function FerrariRecoveryCurve() {
         </div>
       </div>
 
-      <div className="mt-4 grid gap-2 sm:grid-cols-4">
+      <div className="mt-4 grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
         {steps.map((step) => (
           <button
             key={step.id}
@@ -310,13 +478,36 @@ export default function FerrariRecoveryCurve() {
         ))}
       </div>
 
+      <div className="mt-4 rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <div className="text-sm font-semibold text-emerald-100">
+              {selectedSend ? `Courbe envoyée à ${selectedPool.client}` : `Courbe prête pour ${selectedPool.client}`}
+            </div>
+            <div className="mt-1 text-xs text-white/55">
+              {sentCount > 0 ? `${sentCount} courbe${sentCount > 1 ? "s" : ""} envoyée${sentCount > 1 ? "s" : ""} en démo.` : "Valide la courbe pour générer le message client et simuler l'envoi."}
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={validateAndSendSelected}
+            className="rounded-xl bg-emerald-400 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-emerald-300"
+          >
+            Valider + envoyer
+          </button>
+        </div>
+        <div className="mt-3 rounded-xl border border-white/10 bg-slate-950/40 p-3 text-sm leading-6 text-white/75">
+          {selectedSend?.message ?? buildClientMessage(selectedPool, steps)}
+        </div>
+      </div>
+
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-label="Edition de la courbe Ferrari">
-          <div className="max-h-[92vh] w-full max-w-4xl overflow-y-auto rounded-3xl border border-white/10 bg-slate-950 p-5 shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-slate-950/80 p-2 backdrop-blur-sm sm:items-center sm:p-4" role="dialog" aria-modal="true" aria-label={`Edition de la courbe ${selectedPool.client}`}>
+          <div className="max-h-[96dvh] w-full max-w-5xl overflow-y-auto rounded-2xl border border-white/10 bg-slate-950 p-4 shadow-2xl sm:max-h-[92vh] sm:rounded-3xl sm:p-5">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
-                <div className="text-xs uppercase tracking-[0.2em] text-emerald-300/80">B002 · M. Ferrari</div>
-                <h3 className="mt-2 text-2xl font-semibold text-white">Editer la courbe de rétablissement</h3>
+                <div className="text-xs uppercase tracking-[0.2em] text-emerald-300/80">{selectedPool.id} · {selectedPool.client} · {selectedPool.location}</div>
+                <h3 className="mt-2 text-xl font-semibold text-white sm:text-2xl">Editer la courbe de rétablissement</h3>
                 <p className="mt-1 text-sm text-white/55">Glisse les points verts pour le pH, les points jaunes pour le chlore, ou ajuste les valeurs dans la table.</p>
               </div>
               <button type="button" onClick={() => setIsOpen(false)} className="rounded-full border border-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/10">
@@ -335,10 +526,10 @@ export default function FerrariRecoveryCurve() {
               <div className="mt-3 overflow-x-auto">
                 <svg
                   ref={modalSvgRef}
-                  className="h-72 min-w-[680px] w-full touch-none select-none rounded-2xl bg-slate-950/70"
+                  className="h-64 min-w-[560px] w-full touch-none select-none rounded-2xl bg-slate-950/70 sm:h-72 sm:min-w-[680px]"
                   viewBox="0 0 680 230"
                   role="img"
-                  aria-label="Edition tactile de la courbe Ferrari"
+                  aria-label={`Edition tactile de la courbe ${selectedPool.client}`}
                   onPointerMove={(event) => moveDrag("modal", event)}
                   onPointerUp={stopDrag}
                   onPointerCancel={stopDrag}
@@ -438,16 +629,20 @@ export default function FerrariRecoveryCurve() {
                 </div>
 
                 <div className="mt-4 rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-3 text-sm text-white/75">
-                  Plan Ferrari actuel : {steps.map((step) => `${step.time} ${step.action}`).join(" -> ")}.
+                  Plan {selectedPool.client} actuel : {steps.map((step) => `${step.time} ${step.action}`).join(" -> ")}.
                 </div>
 
                 <div className="mt-4 flex flex-wrap gap-2">
                   <button type="button" onClick={resetScenario} className="rounded-xl border border-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/10">
-                    Réinitialiser Ferrari
+                    Réinitialiser {selectedPool.client}
                   </button>
-                  <button type="button" onClick={() => setIsOpen(false)} className="rounded-xl bg-emerald-400 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-emerald-300">
-                    Appliquer à la courbe
+                  <button type="button" onClick={validateAndSendSelected} className="rounded-xl bg-emerald-400 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-emerald-300">
+                    Valider + envoyer
                   </button>
+                </div>
+
+                <div className="mt-4 rounded-2xl border border-white/10 bg-slate-950/40 p-3 text-sm leading-6 text-white/75">
+                  Message envoyé en démo : {buildClientMessage(selectedPool, steps)}
                 </div>
               </div>
             </div>
