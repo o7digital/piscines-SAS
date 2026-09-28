@@ -31,7 +31,7 @@ NODE_ENV=development
 OPENAI_API_KEY=
 LLM_API_KEY=
 HF_TOKEN=
-HF_MODEL=Qwen/Qwen3-235B-A22B-Instruct-2507:novita
+HF_MODEL=Qwen/Qwen3-235B-A22B-Instruct-2507:scaleway
 ```
 
 Les analyses des mesures et des rapports utilisent Hugging Face avec `HF_TOKEN` et `HF_MODEL`, uniquement côté serveur. Ajouter ces variables à `.env.local` en local et aux environnements Vercel du projet lié. Le jeton doit permettre les appels aux Inference Providers. Ne jamais utiliser de variable `PUBLIC_` pour ce jeton.

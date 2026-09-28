@@ -62,14 +62,13 @@ export async function generateReportAnalysis(
           Number(b.status === "attention") - Number(a.status === "attention"),
       )
       .slice(0, 30)
-      .map((pool, index) => {
+      .map((pool) => {
         const selected =
           remainingMeasurements > 0
             ? pool.measurements.slice(-Math.min(remainingMeasurements, 60))
             : [];
         remainingMeasurements -= selected.length;
         return {
-          reference: `B${index + 1}`,
           status: pool.status,
           measurements: pool.measurements.length,
           checks: pool.checks.length,
@@ -137,7 +136,7 @@ export async function generateReportAnalysis(
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-          signal: AbortSignal.timeout(config.timeoutMs ?? 25000),
+          signal: AbortSignal.timeout(config.timeoutMs ?? 45000),
           body: JSON.stringify({
             model,
             max_tokens: 1400,

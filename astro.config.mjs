@@ -7,7 +7,7 @@ import tailwindcss from "@tailwindcss/vite";
 
 const adapter =
   process.env.VERCEL === "1"
-    ? vercel()
+    ? vercel({ maxDuration: 60 })
     : node({
         mode: "standalone",
       });
