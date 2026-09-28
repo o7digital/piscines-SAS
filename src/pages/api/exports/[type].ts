@@ -8,6 +8,7 @@ import {
   readAnalysisRequest,
 } from "../../../lib/reportApi";
 import { defaultReportMonth } from "../../../lib/reportData";
+import { reportCopy } from "../../../lib/reportCopy";
 import { renderReportPdf, reportPdfResponse } from "../../../lib/reportPdf";
 import { automaticAnalysis } from "../../../lib/reporting";
 
@@ -112,7 +113,7 @@ export const GET: APIRoute = async ({ params, url }) => {
       );
   });
   doc.moveDown();
-  doc.fontSize(16).text("Recommandations");
+  doc.fontSize(16).text(reportCopy.fr.recommendations);
   doc
     .fontSize(11)
     .text(

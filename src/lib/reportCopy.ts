@@ -56,7 +56,7 @@ const fr = {
   automatic: "Synthèse automatique",
   ai: "Analyse IA · Hugging Face",
   highlights: "Points clés",
-  recommendations: "Actions recommandées",
+  recommendations: "Olivia AI recommande",
   fallback:
     "L’assistant IA est indisponible. La synthèse automatique reste utilisable.",
   notConfigured:
@@ -144,7 +144,7 @@ export const reportCopy: Record<ReportLanguage, Copy> = {
     automatic: "Automatic summary",
     ai: "AI analysis · Hugging Face",
     highlights: "Key points",
-    recommendations: "Recommended actions",
+    recommendations: "Olivia AI recommends",
     fallback:
       "The AI assistant is unavailable. The automatic summary remains available.",
     notConfigured:
@@ -229,7 +229,7 @@ export const reportCopy: Record<ReportLanguage, Copy> = {
     automatic: "Resumen automático",
     ai: "Análisis IA · Hugging Face",
     highlights: "Puntos clave",
-    recommendations: "Acciones recomendadas",
+    recommendations: "Olivia AI recomienda",
     fallback:
       "El asistente IA no está disponible. El resumen automático sigue disponible.",
     notConfigured:
