@@ -16,6 +16,21 @@ export default defineConfig({
   integrations: [react()],
   output: "server",
   adapter,
+  security: {
+    allowedDomains: [
+      { hostname: "www.bluu3.com", protocol: "https" },
+      { hostname: "bluu3.com", protocol: "https" },
+      { hostname: "piscines-sas-laqe.vercel.app", protocol: "https" },
+      ...(process.env.VERCEL_URL
+        ? [{ hostname: process.env.VERCEL_URL, protocol: "https" }]
+        : []),
+      ...(process.env.VERCEL_BRANCH_URL
+        ? [{ hostname: process.env.VERCEL_BRANCH_URL, protocol: "https" }]
+        : []),
+      { hostname: "localhost", protocol: "http" },
+      { hostname: "127.0.0.1", protocol: "http" },
+    ],
+  },
 
   vite: {
     plugins: [tailwindcss()],

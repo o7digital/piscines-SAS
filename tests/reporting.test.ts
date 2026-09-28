@@ -1,5 +1,8 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
+import { NodeApp } from "astro/app/node";
+import type { IncomingMessage } from "node:http";
+import astroConfig from "../astro.config.mjs";
 import { mvpData } from "../src/data/mvp";
 import {
   automaticAnalysis,
@@ -18,6 +21,31 @@ const output = {
   highlights: ["pH à surveiller."],
   recommendations: ["Faire vérifier le bassin."],
 };
+
+test("Vercel forwarded URLs retain the public HTTPS origin and reject unrelated hosts", () => {
+  const makeRequest = (host: string) =>
+    NodeApp.createRequest(
+      {
+        headers: {
+          host: "internal.vercel",
+          "x-forwarded-host": host,
+          "x-forwarded-proto": "https",
+        },
+        method: "POST",
+        url: "/api/reports/summary",
+        socket: {},
+      } as IncomingMessage,
+      { skipBody: true, allowedDomains: astroConfig.security.allowedDomains },
+    );
+  assert.equal(
+    new URL(makeRequest("www.bluu3.com").url).origin,
+    "https://www.bluu3.com",
+  );
+  assert.equal(
+    new URL(makeRequest("untrusted.invalid").url).hostname,
+    "localhost",
+  );
+});
 const provider = (content: unknown, finish_reason = "stop") =>
   new Response(
     JSON.stringify({ choices: [{ message: { content }, finish_reason }] }),

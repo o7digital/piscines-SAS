@@ -144,6 +144,14 @@ test("API rejects invalid filters, invalid inputs, cross-origin requests and mis
     data: { month: "2026-05" },
   });
   expect(wrongOrigin.status()).toBe(403);
+  const sameOrigin = await request.post("/api/reports/summary", {
+    headers: {
+      Origin: new URL(process.env.TEST_BASE_URL ?? "http://127.0.0.1:4322")
+        .origin,
+    },
+    data: { month: "2026-05", pool: "pool-villa-azur", measurement: "missing" },
+  });
+  expect(sameOrigin.status()).toBe(404);
   const missing = await request.get(
     "/api/exports/monthly?month=2026-05&pool=missing",
   );
