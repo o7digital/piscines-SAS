@@ -20,7 +20,7 @@ const copyByLang = {
     tagline: "Votre piscine, toujours sous contrôle.",
     allPools: "Toutes les piscines",
     mvp: "Mode MVP : PostgreSQL Railway via `DATABASE_URL`, avec données seed locales quand la base n'est pas configurée.",
-    nav: ["Vue globale", "Pisciniste", "Propriétaire", "Piscines", "Mesures", "Interventions", "Pool Passport", "Eco-Score", "Admin"],
+    nav: ["Vue globale", "Pisciniste", "Propriétaire", "Piscines", "Mesures", "Interventions", "Rapports IA", "Pool Passport", "Eco-Score", "Admin"],
   },
   en: {
     today: "Today",
@@ -29,7 +29,7 @@ const copyByLang = {
     tagline: "Your pool, always under control.",
     allPools: "All pools",
     mvp: "MVP mode: Railway PostgreSQL via `DATABASE_URL`, with local seed data when the database is not configured.",
-    nav: ["Overview", "Provider", "Owner", "Pools", "Measurements", "Interventions", "Pool Passport", "Eco-Score", "Admin"],
+    nav: ["Overview", "Provider", "Owner", "Pools", "Measurements", "Interventions", "AI reports", "Pool Passport", "Eco-Score", "Admin"],
   },
   es: {
     today: "Hoy",
@@ -38,17 +38,17 @@ const copyByLang = {
     tagline: "Tu piscina, siempre bajo control.",
     allPools: "Todas las piscinas",
     mvp: "Modo MVP: PostgreSQL Railway via `DATABASE_URL`, con datos locales de prueba cuando la base no esta configurada.",
-    nav: ["Vista global", "Piscinero", "Propietario", "Piscinas", "Mediciones", "Intervenciones", "Pool Passport", "Eco-Score", "Admin"],
+    nav: ["Vista global", "Piscinero", "Propietario", "Piscinas", "Mediciones", "Intervenciones", "Informes IA", "Pool Passport", "Eco-Score", "Admin"],
   },
 };
 const copy = copyByLang[lang] ?? copyByLang.fr;
 
-const navItems = ["/app", "/app/provider", "/app/owner", "/app/pools", "/app/measurements", "/app/interventions", "/app/passport", "/app/eco-score", "/app/admin"].map((href, index) => ({
+const navItems = ["/app", "/app/provider", "/app/owner", "/app/pools", "/app/measurements", "/app/interventions", "/app/reports", "/app/passport", "/app/eco-score", "/app/admin"].map((href, index) => ({
   href: `${basePrefix}${href}`,
   label: copy.nav[index],
 }));
 
-const isActive = (href: string) => (href === "/app" ? pathname === href : pathname.startsWith(href));
+const isActive = (href: string) => (href === `${basePrefix}/app` ? pathname === href : pathname.startsWith(href));
 ---
 <BaseLayout
   title={`${title} | Bluu3`}

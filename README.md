@@ -30,9 +30,29 @@ NEXT_PUBLIC_APP_URL=http://localhost:4321
 NODE_ENV=development
 OPENAI_API_KEY=
 LLM_API_KEY=
+HF_TOKEN=
+HF_MODEL=Qwen/Qwen3-235B-A22B-Instruct-2507:novita
 ```
 
-`OPENAI_API_KEY` ou `LLM_API_KEY` sont réservées aux futures fonctions IA. Le MVP actuel n'en dépend pas.
+Les analyses des mesures et des rapports utilisent Hugging Face avec `HF_TOKEN` et `HF_MODEL`, uniquement côté serveur. Ajouter ces variables à `.env.local` en local et aux environnements Vercel du projet lié. Le jeton doit permettre les appels aux Inference Providers. Ne jamais utiliser de variable `PUBLIC_` pour ce jeton.
+
+`OPENAI_API_KEY` et `LLM_API_KEY` ne sont pas utilisées par ce reporting.
+
+## Reporting avec Hugging Face
+
+- `/app/measurements` : analyse individuelle de chaque relevé (pH, chlore, température, ORP, alcalinité, dureté), avec contexte mensuel et recommandations. La saisie d'une nouvelle mesure lance automatiquement l'analyse.
+- `/app/reports` : filtres par mois et bassin, indicateurs calculés sur tous les relevés de la période, courbes, synthèse IA automatique et exports PDF/CSV. Rapports également disponibles sur `/en/app/reports` et `/es/app/reports`.
+- `POST /api/reports/summary` : JSON `{ "month": "2026-05", "pool": "pool-villa-azur", "measurement": "mea-1", "lang": "fr" }`. `pool` et `measurement` sont facultatifs.
+- `POST /api/measurements` : valide et enregistre une mesure, puis retourne `analysis` et `persisted` en plus des champs du relevé.
+- `POST /api/exports/monthly` : mêmes filtres ; génère le PDF avec l'analyse Hugging Face. `GET` exporte une synthèse calculée sans appel facturé. `/api/reports/export?month=2026-05` exporte le CSV.
+
+Les valeurs restent calculées par le serveur. Hugging Face reçoit des observations anonymisées sans noms, adresses ni notes. Le contexte détaillé est borné à 200 mesures récentes et 30 bassins ; les statistiques couvrent toujours tous les relevés, et les limites de détail sont signalées dans le contexte IA. Un relevé sélectionné est toujours transmis intégralement. Les recommandations doivent être relues par le pisciniste.
+
+Les réponses IA sont validées avant affichage. En cas d'indisponibilité, de configuration manquante, d'erreur d'authentification ou de réponse incorrecte, la synthèse calculée est clairement identifiée. Les appels identiques sont regroupés et mis en cache 15 minutes par instance ; un limiteur de 5 requêtes/minute par adresse et par instance protège les endpoints d'analyse. Une limitation persistante à l'échelle du déploiement pourra être ajoutée à l'infrastructure d'hébergement.
+
+Sans `DATABASE_URL`, les données de mai 2026 sont des exemples. Les nouvelles mesures sont analysées sans sauvegarde durable ; elles restent dans la session du navigateur et peuvent être incluses dans leur PDF grâce à une observation validée envoyée au serveur. Les données de PostgreSQL sont utilisées dès que la base est configurée. L'Eco-Score est une estimation MVP, pas une économie environnementale mesurée.
+
+Tests : `npm test`. Pour les tests navigateur, installer Chromium avec `npx playwright install chromium`, puis lancer `npm run test:e2e` (le serveur de test démarre automatiquement). `TEST_BASE_URL` permet de vérifier un serveur existant.
 
 ## Base PostgreSQL
 

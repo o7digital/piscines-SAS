@@ -21,3 +21,5 @@ pnpm-debug.log*
 # system
 .DS_Store
 .vercel
+test-results/
+playwright-report/
